@@ -1,8 +1,8 @@
 ---
 // Newsletter inline literacki — bez boxa. Spec §5.2/§5.6.
-// Wariant 'default' (Home) i 'wersje' (strona Wersje).
-// Submit bez backendu — fetch do /api/subscribe wejdzie w iteracji 5;
-// tu jeszcze tylko podmiana tekstu buttona (event.preventDefault).
+// Warianty: 'default' (Home) i 'wersje' (strona Wersje).
+// Submit → POST /api/subscribe → Buttondown (iteracja 5).
+// Fallback bez JS: form ma action=mailto:, method=get.
 
 interface Props {
   variant?: 'default' | 'wersje';
@@ -35,17 +35,17 @@ const copy = variant === 'wersje'
 
       <form
         class="newsletter-inline-form"
-        action="mailto:kontakt@szmidtke.pl"
+        action="mailto:kontakt@szmidtke.pl?subject=Newsletter"
         method="get"
         data-newsletter-form
         data-success-text={copy.successText}
       >
         <label for={`${id}-email`} class="sr-only">Twój adres e-mail</label>
         <input id={`${id}-email`} name="email" type="email" placeholder="twój adres…" required autocomplete="email" />
-        <!-- honeypot (iteracja 5) — hidden input, zostawiony tu żeby nie zmieniać layoutu potem -->
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
         <button type="submit">zapisz →</button>
       </form>
+
       <div class="newsletter-note" aria-live="polite" data-newsletter-note>
         Wypisać się można jednym kliknięciem.
       </div>
@@ -57,15 +57,53 @@ const copy = variant === 'wersje'
   (() => {
     const forms = document.querySelectorAll('[data-newsletter-form]');
     forms.forEach((form) => {
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const button = form.querySelector('button');
         const input = form.querySelector('input[type="email"]');
+        const honeypot = form.querySelector('input[name="website"]');
+        const note = form.parentElement.querySelector('[data-newsletter-note]');
         const successText = form.dataset.successText || '— jest, do czwartku.';
-        if (button) button.textContent = successText;
-        if (input) {
-          input.value = '';
-          input.setAttribute('disabled', '');
+
+        if (!button || !input) return;
+
+        const originalBtn = button.textContent;
+        button.disabled = true;
+        button.textContent = 'wysyłam…';
+
+        try {
+          const resp = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: input.value,
+              website: honeypot ? honeypot.value : '',
+            }),
+          });
+          const data = await resp.json().catch(() => ({ ok: false }));
+
+          if (data.ok) {
+            button.textContent = successText;
+            input.value = '';
+            input.disabled = true;
+            if (note) note.textContent = 'Potwierdzenie przyjdzie zaraz na adres.';
+          } else {
+            button.textContent = originalBtn;
+            button.disabled = false;
+            if (note) {
+              note.classList.add('error');
+              note.textContent = data.error === 'invalid_email'
+                ? 'To chyba nie jest poprawny adres. Spróbuj jeszcze raz.'
+                : 'Coś się zacięło. Spróbuj jeszcze raz lub napisz na kontakt@szmidtke.pl.';
+            }
+          }
+        } catch (err) {
+          button.textContent = originalBtn;
+          button.disabled = false;
+          if (note) {
+            note.classList.add('error');
+            note.textContent = 'Brak połączenia. Spróbuj za chwilę.';
+          }
         }
       });
     });
@@ -150,10 +188,14 @@ const copy = variant === 'wersje'
     transition: color 200ms;
     white-space: nowrap;
   }
-  .newsletter-inline-form button:hover {
+  .newsletter-inline-form button:hover:not(:disabled) {
     color: var(--accent-hover);
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+  .newsletter-inline-form button:disabled {
+    cursor: default;
+    opacity: 0.8;
   }
   .newsletter-inline-form button:focus-visible {
     outline: 2px solid var(--accent);
@@ -167,5 +209,8 @@ const copy = variant === 'wersje'
     color: var(--text-muted);
     font-style: italic;
     font-family: var(--font-serif);
+  }
+  .newsletter-note.error {
+    color: var(--error);
   }
 </style>

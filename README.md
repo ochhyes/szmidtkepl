@@ -59,8 +59,19 @@ Folder `docs/` zawiera:
 
 ## Newsletter (Buttondown)
 
-Klucz API: https://buttondown.email/settings/programming → wklej do `.env` jako `BUTTONDOWN_API_KEY`.
-Fallback bez JS: formularz otwiera klienta maila (`mailto:kontakt@szmidtke.pl`).
+1. Załóż konto na https://buttondown.email (darmowy plan wystarcza na start).
+2. Weź klucz z https://buttondown.email/settings/programming.
+3. Wklej do `.env` jako `BUTTONDOWN_API_KEY=...`.
+4. Uruchom `npm run dev` — formularz na Home i stronie Wersje wysyła do `/api/subscribe`, który przekazuje do Buttondown.
+
+Zachowanie:
+- Sukces → button zmienia tekst na *„— jest, do czwartku."* (wariant Home) lub *„— dam znać."* (Wersje).
+- Duplikat → również sukces (Buttondown zwraca 400 z `already_subscribed`; obsługujemy jako „już jesteś").
+- Błąd walidacji → mikrocopy pod formularzem zmienia się na komunikat błędu.
+- Honeypot (hidden input `website`) chroni przed botami bez palenia klucza API.
+- Fallback bez JS: formularz ma `action="mailto:kontakt@szmidtke.pl?subject=Newsletter"` — klient maila otwiera się przy submit.
+
+Tryb `output: hybrid` — Astro prerenderuje wszystko statycznie oprócz `src/pages/api/*`, które działa jako Node server endpoint (adapter `@astrojs/node` standalone, port 3000).
 
 ## Deploy
 
