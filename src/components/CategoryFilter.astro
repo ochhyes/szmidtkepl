@@ -1,0 +1,57 @@
+---
+import { CATEGORY_ORDER, CATEGORY_LABEL } from '../content/config';
+
+interface Props {
+  active: string; // 'all' | category key
+}
+const { active } = Astro.props;
+
+const items = [
+  { key: 'all', label: 'wszystko', href: '/blog' },
+  ...CATEGORY_ORDER.map((key) => ({
+    key,
+    label: CATEGORY_LABEL[key],
+    href: `/blog/kategoria/${key}`,
+  })),
+];
+---
+
+<nav class="blog-filter" aria-label="Filtr kategorii">
+  {items.map((item) => (
+    <a
+      href={item.href}
+      aria-current={active === item.key ? 'page' : undefined}
+    >{item.label}</a>
+  ))}
+</nav>
+
+<style>
+  .blog-filter {
+    padding: 24px 0 16px;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .blog-filter a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-style: italic;
+  }
+  .blog-filter a[aria-current="page"] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .blog-filter a:hover { color: var(--accent); }
+  @media (max-width: 640px) {
+    .blog-filter {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      scrollbar-width: none;
+    }
+    .blog-filter::-webkit-scrollbar { display: none; }
+  }
+</style>

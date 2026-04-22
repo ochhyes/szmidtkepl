@@ -1,0 +1,56 @@
+---
+import type { BlogPost } from '../utils/posts';
+
+interface Props {
+  related: BlogPost[];
+}
+const { related } = Astro.props;
+---
+
+<aside class="post-footer">
+  <p class="inline-optin">
+    Jeśli chcesz dostawać nowe teksty e-mailem — <a href="/#newsletter">list co dwa tygodnie</a>. Bez automatów.
+  </p>
+  {related.length > 0 && (
+    <div class="related">
+      <h4>zobacz też</h4>
+      {related.map((post) => (
+        <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+      ))}
+    </div>
+  )}
+</aside>
+
+<style>
+  .post-footer {
+    max-width: var(--reading-w);
+    margin: 80px auto 0;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+  .post-footer .inline-optin {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    font-size: 18px;
+  }
+  .post-footer .related h4 {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .post-footer .related a {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .post-footer .related a:hover { color: var(--accent); }
+</style>

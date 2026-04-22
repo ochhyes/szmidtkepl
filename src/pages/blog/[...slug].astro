@@ -1,0 +1,93 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostBody from '../../components/PostBody.astro';
+import PostFooter from '../../components/PostFooter.astro';
+import { getPublishedPosts, getRelatedPosts, formatPolishDate } from '../../utils/posts';
+import { CATEGORY_LABEL } from '../../content/config';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const related = await getRelatedPosts(post, 2);
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://szmidtke.pl';
+const canonical = new URL(`/blog/${post.slug}`, siteUrl).toString();
+const ogImage = post.data.ogImage ?? new URL(`/og/${post.slug}.png`, siteUrl).toString();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.lead,
+  datePublished: post.data.date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'Marcin Szmidtke',
+    url: siteUrl,
+  },
+  image: ogImage,
+  mainEntityOfPage: canonical,
+};
+
+const categoryLabel = CATEGORY_LABEL[post.data.category] || post.data.category;
+const meta = `${formatPolishDate(post.data.date)} — ${categoryLabel}, ${post.data.readingTime}`;
+---
+
+<BaseLayout
+  title={`${post.data.title} — Marcin Szmidtke`}
+  description={post.data.lead}
+  ogType="article"
+  publishedTime={post.data.date.toISOString()}
+  canonical={canonical}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  <section class="post-block">
+    <div class="container">
+      <article class="post-single">
+        <div class="meta">{meta}</div>
+        <h1>{post.data.title}</h1>
+        <p class="lead-para">{post.data.lead}</p>
+        <PostBody>
+          <Content />
+        </PostBody>
+      </article>
+      <PostFooter related={related} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .post-block { padding: 96px 0; }
+  .post-single {
+    max-width: var(--reading-w);
+    margin: 0 auto;
+  }
+  .post-single .meta { margin-bottom: 20px; }
+  .post-single h1 {
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  @media (min-width: 768px) {
+    .post-single h1 { font-size: 54px; }
+  }
+
+  .post-single .lead-para {
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+</style>

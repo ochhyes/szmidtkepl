@@ -1,0 +1,34 @@
+---
+interface Props {
+  prevUrl?: string | null;
+  nextUrl?: string | null;
+}
+const { prevUrl, nextUrl } = Astro.props;
+---
+
+{(prevUrl || nextUrl) && (
+  <div class="pagination">
+    {prevUrl ? <a href={prevUrl}>← poprzednie</a> : <span class="disabled">← poprzednie</span>}
+    {nextUrl ? <a href={nextUrl}>kolejne 10 →</a> : <span class="disabled">kolejne 10 →</span>}
+  </div>
+)}
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    padding: 48px 0 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+  }
+  .pagination a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .pagination a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .pagination span.disabled { color: var(--text-muted); }
+</style>
