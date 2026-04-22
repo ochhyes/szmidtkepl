@@ -1,34 +1,20 @@
 ---
-// Placeholder home — iteracja 0. W iteracji 2 zostanie zastąpione pełną stroną główną.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Placeholder Home — iteracja 1. Pełna strona główna wchodzi w iteracji 2.
 ---
 
-<!doctype html>
-<html lang="pl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>szmidtke.pl — w budowie</title>
-    <meta name="description" content="Marcin Szmidtke — strona w budowie." />
-    <style>
-      body {
-        font-family: Georgia, serif;
-        background: #FAF8F3;
-        color: #1F1B18;
-        display: grid;
-        place-items: center;
-        min-height: 100vh;
-        margin: 0;
-        text-align: center;
-        padding: 24px;
-      }
-      h1 { font-weight: 500; font-size: 32px; letter-spacing: -0.01em; margin: 0 0 12px; }
-      p  { color: #6B6560; font-style: italic; margin: 0; }
-    </style>
-  </head>
-  <body>
-    <div>
-      <h1>Marcin Szmidtke</h1>
-      <p>Strona w budowie.</p>
+<BaseLayout
+  title="Marcin Szmidtke"
+  description="Piszę o pasywności, schematach, drodze bez mety. Prowadzę zespół, działam w Fundacji Pomocja."
+>
+  <section class="block">
+    <div class="container reading">
+      <h1 style="font-size: 40px; margin: 48px 0 16px;">Tu wejdzie Home.</h1>
+      <p style="color: var(--text-secondary); font-style: italic;">
+        Placeholder po iteracji 1 — layout shell działa, motyw jasny/ciemny działa,
+        skip-link i hamburger działają. Treść Home w iteracji 2.
+      </p>
     </div>
-  </body>
-</html>
+  </section>
+</BaseLayout>

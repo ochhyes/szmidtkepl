@@ -1,0 +1,60 @@
+---
+// Footer globalny — 3-kolumnowy grid (desktop) → 1-kolumnowy (mobile).
+// Kolumna 3 zawiera theme toggle. Spec §5.7.
+const year = new Date().getFullYear();
+---
+
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>O stronie</h4>
+        <p>Pisze Marcin Szmidtke.</p>
+        <p>Strona nie używa trackerów, reklam ani cookie. Po prostu tekst.</p>
+      </div>
+      <div>
+        <h4>Nawigacja</h4>
+        <a href="/blog">piszę</a>
+        <a href="/o-mnie">o mnie</a>
+        <a href="/wersje">wersje</a>
+        <a href="/#newsletter">newsletter</a>
+        <a href="/rss.xml">rss</a>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <a href="mailto:kontakt@szmidtke.pl">kontakt@szmidtke.pl</a>
+        <a href="https://www.linkedin.com/in/marcin-szmidtke" rel="me noopener">linkedin</a>
+        <button class="theme-toggle" data-theme-toggle aria-label="Przełącz motyw jasny/ciemny">
+          <span data-theme-label>tryb ciemny ↺</span>
+        </button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {year} Marcin Szmidtke</span>
+      <span>zbudowane w Astro · <a href="https://github.com/ochhyes/szmidtkepl" rel="noopener">źródła na GitHubie</a></span>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  (() => {
+    const btn = document.querySelector('[data-theme-toggle]');
+    const label = document.querySelector('[data-theme-label]');
+    if (!btn || !label) return;
+
+    const sync = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      label.textContent = isDark ? 'tryb jasny ↺' : 'tryb ciemny ↺';
+    };
+    sync();
+
+    btn.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'light') html.removeAttribute('data-theme');
+      else html.setAttribute('data-theme', 'dark');
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      sync();
+    });
+  })();
+</script>
