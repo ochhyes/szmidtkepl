@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WersjeTeaser from '../components/WersjeTeaser.astro';
+import NewsletterInline from '../components/NewsletterInline.astro';
+import Ornament from '../components/Ornament.astro';
+
+// Fragment z rozdziału czwartego — ten sam tekst co we wpisie blogowym,
+// ale prezentowany jako fragment książki (bez meta wpisu, z fragment-label).
+---
+
+<BaseLayout
+  title="Wersje — powieść Marcina Szmidtke"
+  description="Powieść o kimś, kogo nosi przez jego własne wzorce — i o tym, jak powoli uczy się to zauważyć. Rękopis w redakcji."
+>
+  <section class="block">
+    <div class="container wide">
+      <WersjeTeaser variant="full" />
+
+      <div class="wersje-fragment">
+        <div class="fragment-label">fragment z rozdziału czwartego</div>
+        <p>
+          Tomek nie wiedział, w którym momencie zaczął się zgadzać.
+          Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu,
+          jak kubek postawiony dzień wcześniej w innym miejscu, o którym zapomniał,
+          ale który rano był tam, gdzie zawsze, jakby nigdy nie wędrował.
+        </p>
+        <p>
+          Wstał wcześnie. Zrobił kawę. Nie wspomniał jej o tym, co powiedziała wieczorem.
+          Ona też nie wspomniała. To nie było zawieszenie broni — raczej uznanie,
+          że broń była wymyślona, że nic się nie zdarzyło, że rozmowa nie była rozmową, tylko pogodą.
+        </p>
+        <p>
+          Miał wrażenie, że znowu coś zmienił w sobie, żeby pasowało.
+          I miał wrażenie, że nie umiałby powiedzieć, co konkretnie.
+        </p>
+        <p>
+          W kuchni było jasno. Okno wychodziło na zachód, ale o tej porze światło padało w skos od korytarza,
+          od strony, z której nie powinno padać. Tomek patrzył na smugę na podłodze
+          i nie wiedział, dlaczego ona go uspokajała.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Ornament />
+
+  <NewsletterInline variant="wersje" id="newsletter-wersje" />
+</BaseLayout>
+
+<style>
+  .wersje-fragment {
+    max-width: var(--reading-w);
+    margin: 64px auto 0;
+    padding: 40px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .wersje-fragment p {
+    margin-bottom: 20px;
+    font-size: 19px;
+    line-height: 1.7;
+  }
+  .wersje-fragment .fragment-label {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+</style>

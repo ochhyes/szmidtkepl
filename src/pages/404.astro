@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404 — Marcin Szmidtke"
+  description="Nie ma tego, czego szukasz. Jest to, co mam."
+>
+  <section class="block">
+    <div class="container reading">
+      <div class="not-found">
+        <h1>404</h1>
+        <p class="message">Nie ma tego, czego szukasz.<br>Jest to, co mam.</p>
+        <nav class="not-found-nav">
+          <a href="/">strona główna →</a>
+          <a href="/blog">wszystkie teksty →</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: 96px 0;
+    text-align: left;
+  }
+  .not-found h1 {
+    font-size: 80px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    margin-bottom: 32px;
+    line-height: 1;
+  }
+  @media (min-width: 768px) {
+    .not-found h1 { font-size: 120px; }
+  }
+  .not-found .message {
+    font-size: 24px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 48px;
+    max-width: 500px;
+  }
+  @media (min-width: 768px) {
+    .not-found .message { font-size: 28px; }
+  }
+  .not-found-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .not-found-nav a {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .not-found-nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

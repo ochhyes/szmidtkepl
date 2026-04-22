@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
+
+// Tekst About — z prototypu HTML (odzwierciedla szmidtke-pl-copy-strona-v1.md,
+// jeśli/gdy Marcin go dostarczy — podmiana jest trywialna).
+// Marker [COPY: about] w komentarzu poniżej pomaga zlokalizować miejsce edycji.
+---
+
+<BaseLayout
+  title="O mnie — Marcin Szmidtke"
+  description="Marcin Szmidtke — piszę, prowadzę zespół, działam w Fundacji Pomocja. Kończę powieść Wersje."
+>
+  <section class="about-preview" id="about">
+    <div class="container wide">
+      <div class="about-grid">
+        <div class="about-portrait-wrap">
+          <PortraitPlaceholder ratio="3/4" label="Portret drugi · 1200 × 1600" />
+        </div>
+        <div class="about-text">
+          <h2>O mnie</h2>
+          {/* [COPY: about] — tu wchodzi tekst About (patrz szmidtke-pl-copy-strona-v1.md, jeśli istnieje) */}
+          <p>
+            Zacząłem pisać, kiedy zorientowałem się, że dużo robię, żeby nie myśleć.
+            Że skuteczność — zespół pod sobą, dowożone cele, fundacja, dziecko, kolejny trening —
+            jest drogą ucieczki tak samo dobrą jak każda inna. Nie przestałem działać.
+            Zacząłem obok działania zapisywać, co po drodze zauważam.
+          </p>
+          <p>Ta strona to zbiór tych zapisów.</p>
+          <p>
+            Nie jest to poradnik, jak żyć lepiej — nie mam tej wiedzy.
+            Nie jest to blog motywacyjny — motywacji mam aż za dużo, problem mam raczej z tym, co pod motywacją.
+            Jest to raczej notes pisany głośno. O pasywności, która wygląda jak odpoczynek, ale nim nie jest.
+            O schematach, w które wracasz mimo że je rozpoznajesz.
+            O zarządzaniu ludźmi, kiedy samemu jesteś w środku rozjebany.
+            O ojcostwie, które zaczyna się długo po narodzinach dziecka.
+          </p>
+          <p>
+            Piszę dla faceta, który z zewnątrz dowozi, a w środku nosi pytania, których nie zadaje kolegom.
+            Jeśli to ty — zostań.
+          </p>
+          <p>
+            Poza pisaniem prowadzę zespół. Jestem członkiem Fundacji Pomocja,
+            gdzie współprowadzimy projekt Młody Ojciec — wsparcie dla mężczyzn wchodzących w rolę,
+            której nikt nie szkoli. Kończę powieść <em><a href="/wersje">Wersje</a></em>.
+            Czasem rysuję kredkami. Kiedyś biegałem długie dystanse —
+            to raczej mówi o tym, co we mnie nie było w porządku, niż o sporcie.
+          </p>
+          <p>
+            Jeśli chcesz czytać regularnie — <a href="/#newsletter">zapisz się do newslettera</a>.
+            Jeśli chcesz coś powiedzieć — odpisz na pierwszy list, który przyjdzie. Piszę sam.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-preview {
+    padding: 96px 0;
+    background: var(--bg-alt);
+  }
+  .about-grid {
+    display: grid;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 2fr 3fr;
+      gap: 80px;
+    }
+  }
+  .about-portrait-wrap {
+    width: 100%;
+  }
+  .about-text h2 {
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  @media (min-width: 768px) {
+    .about-text h2 { font-size: 48px; }
+  }
+  .about-text p {
+    margin-bottom: 18px;
+    color: var(--text);
+    font-size: 19px;
+    line-height: 1.75;
+  }
+</style>
