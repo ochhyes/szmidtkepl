@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>szmidtke.pl — projekt ostateczny</title>
+<meta name="description" content="Marcin Szmidtke — piszę o tym, co widać zza skuteczności." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================
+     TOKENY — kolor, typografia, rytm pionowy.
+     Wszystko w custom properties — Claude Code przenosi do
+     :root + data-theme="dark" w Astro/Tailwind.
+     ========================================================== */
+  :root {
+    /* Paleta — light */
+    --bg: #FAF8F3;           /* warm paper */
+    --bg-alt: #F1ECE1;        /* cream wyróżnienia */
+    --text: #1F1B18;          /* near-black, ciepłe */
+    --text-secondary: #6B6560;
+    --text-muted: #9E9890;
+    --accent: #6B2E2E;        /* burgundy — akcent tekstowy */
+    --accent-hover: #4A1E1E;
+    --border: #E5DFD2;
+
+    /* Typografia */
+    --font-serif: 'Newsreader', 'Source Serif Pro', Georgia, serif;
+    --font-ui:    'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Rytm */
+    --reading-w: 680px;
+    --wide-w:    960px;
+    --page-w:    1200px;
+  }
+  html[data-theme="dark"] {
+    --bg: #1A1714;
+    --bg-alt: #231F1B;
+    --text: #EAE4DA;
+    --text-secondary: #A09A90;
+    --text-muted: #6E685F;
+    --accent: #C88A7A;        /* pale burgundy na ciemnym */
+    --accent-hover: #DDA598;
+    --border: #332E28;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme]) {
+      --bg: #1A1714;
+      --bg-alt: #231F1B;
+      --text: #EAE4DA;
+      --text-secondary: #A09A90;
+      --text-muted: #6E685F;
+      --accent: #C88A7A;
+      --accent-hover: #DDA598;
+      --border: #332E28;
+    }
+  }
+
+  /* ==========================================================
+     RESET + BAZA
+     ========================================================== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background 300ms ease, color 300ms ease;
+    /* Delikatna tekstura papieru — zanika w dark mode, staje się subtelniejsza */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  html[data-theme="dark"] body {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.8 0 0 0 0 0.75 0 0 0 0 0.7 0 0 0 0.02 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 150ms, color 150ms;
+  }
+  a:hover { color: var(--accent-hover); text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  img { max-width: 100%; height: auto; display: block; }
+
+  /* Klasy narzędziowe */
+  .ui   { font-family: var(--font-ui); }
+  .container { max-width: var(--page-w); margin: 0 auto; padding: 0 24px; }
+  @media (min-width: 768px) { .container { padding: 0 48px; } }
+  .reading { max-width: var(--reading-w); margin-left: auto; margin-right: auto; }
+  .wide    { max-width: var(--wide-w);    margin-left: auto; margin-right: auto; }
+
+  .meta {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 8px;
+    background: var(--accent); color: var(--bg);
+    padding: 8px 14px; font-family: var(--font-ui); font-size: 14px;
+    z-index: 100;
+  }
+  .skip-link:focus { left: 16px; }
+
+  /* ==========================================================
+     HEADER
+     ========================================================== */
+  header.site { padding: 28px 0; }
+  header.site .inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .wordmark {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 21px;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .wordmark:hover { color: var(--text); text-decoration: none; }
+
+  nav.primary ul { list-style: none; display: flex; gap: 32px; }
+  nav.primary a {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 400;
+  }
+  nav.primary a:hover,
+  nav.primary a[aria-current="page"] { color: var(--text); text-decoration: none; }
+
+  .hamburger {
+    display: none; background: none; border: none; cursor: pointer;
+    color: var(--text); padding: 8px;
+  }
+  @media (max-width: 720px) {
+    nav.primary { display: none; }
+    .hamburger { display: block; }
+  }
+
+  /* ==========================================================
+     HERO — asymetryczny (portret wchodzi w tekst)
+     ========================================================== */
+  section.hero { padding: 72px 0 120px; position: relative; }
+  @media (min-width: 768px) { section.hero { padding: 112px 0 160px; } }
+
+  .hero-wrap { position: relative; max-width: 1100px; margin: 0 auto; }
+
+  .hero-portrait {
+    position: relative;
+    width: 320px;
+    aspect-ratio: 4/5;
+    background: var(--bg-alt);
+    margin-bottom: -80px;
+    margin-left: 0;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    text-align: center;
+    padding: 24px;
+  }
+  @media (min-width: 900px) {
+    .hero-portrait {
+      margin-left: 40px;
+      margin-bottom: -120px;
+      width: 380px;
+    }
+  }
+  .hero-text-wrap { padding-top: 40px; padding-left: 24px; }
+  @media (min-width: 900px) { .hero-text-wrap { padding-top: 0; padding-left: 440px; } }
+
+  h1.hero-statement {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+  @media (min-width: 768px) { h1.hero-statement { font-size: 62px; } }
+  .hero-sub {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 520px;
+  }
+
+  /* ==========================================================
+     ORNAMENT — zamiast <hr>
+     ========================================================== */
+  .ornament {
+    text-align: center;
+    margin: 72px 0;
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+    font-size: 20px;
+    letter-spacing: 1.2em;
+    padding-left: 1.2em;
+    user-select: none;
+  }
+
+  /* ==========================================================
+     SECTION TITLES
+     ========================================================== */
+  section.block { padding: 56px 0; }
+  h2.section-title {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 48px;
+    color: var(--text);
+  }
+  @media (min-width: 768px) { h2.section-title { font-size: 38px; } }
+
+  /* ==========================================================
+     FEED — lista wpisów
+     ========================================================== */
+  article.post-preview {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  article.post-preview:first-of-type { padding-top: 0; }
+  article.post-preview:last-of-type  { border-bottom: none; }
+
+  .post-meta { margin-bottom: 10px; }
+
+  article.post-preview h3 {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  @media (min-width: 768px) { article.post-preview h3 { font-size: 32px; } }
+  article.post-preview h3 a { color: var(--text); text-decoration: none; }
+  article.post-preview h3 a:hover { color: var(--accent); text-decoration: none; }
+
+  article.post-preview .lead {
+    color: var(--text-secondary);
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: 620px;
+  }
+
+  .read-more {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .read-more:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .all-posts-link {
+    display: inline-block;
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ==========================================================
+     BLOG LIST (podstrona /blog)
+     ========================================================== */
+  .blog-header {
+    padding: 80px 0 24px;
+    text-align: left;
+  }
+  .blog-header h1 {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 768px) { .blog-header h1 { font-size: 64px; } }
+  .blog-header .subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--text-secondary);
+    max-width: 560px;
+  }
+  .blog-filter {
+    padding: 24px 0 16px;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .blog-filter a { color: var(--text-secondary); text-decoration: none; font-style: italic; }
+  .blog-filter a[aria-current="page"] { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+  .blog-filter a:hover { color: var(--accent); }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    padding: 48px 0 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+  }
+  .pagination a { color: var(--accent); text-decoration: none; }
+  .pagination a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .pagination span.disabled { color: var(--text-muted); }
+
+  /* ==========================================================
+     POJEDYNCZY WPIS
+     ========================================================== */
+  section.post-block { padding: 96px 0; }
+  .post-single { max-width: var(--reading-w); margin: 0 auto; }
+  .post-single .meta { margin-bottom: 20px; }
+  .post-single h1 {
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  @media (min-width: 768px) { .post-single h1 { font-size: 54px; } }
+
+  .post-single .lead-para {
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+
+  .post-single p {
+    margin-bottom: 24px;
+    font-size: 19px;
+    line-height: 1.75;
+  }
+  .post-single h3 {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 48px 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Drop cap — pierwszy akapit eseju */
+  .post-single .has-dropcap::first-letter {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 5.2em;
+    float: left;
+    line-height: 0.85;
+    padding: 6px 14px 0 0;
+    color: var(--accent);
+  }
+
+  .post-single blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 28px;
+    font-style: italic;
+    margin: 40px 0;
+    color: var(--text-secondary);
+    font-size: 21px;
+    line-height: 1.55;
+  }
+
+  .post-single .inline-image {
+    margin: 48px -40px;
+    aspect-ratio: 3/2;
+    background: var(--bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+  @media (max-width: 720px) { .post-single .inline-image { margin: 32px 0; } }
+  .post-single .inline-image-caption {
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: -32px;
+    margin-bottom: 40px;
+  }
+
+  /* Stopka wpisu — inline opt-in + linki powiązane */
+  .post-footer {
+    max-width: var(--reading-w);
+    margin: 80px auto 0;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+  .post-footer .inline-optin {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+  .post-footer .related h4 {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .post-footer .related a {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .post-footer .related a:hover { color: var(--accent); }
+
+  /* ==========================================================
+     NEWSLETTER — inline, literacki
+     ========================================================== */
+  section.newsletter-section { padding: 96px 0; }
+  .newsletter-literary { max-width: 620px; margin: 0 auto; text-align: left; }
+  .newsletter-literary h3 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 768px) { .newsletter-literary h3 { font-size: 36px; } }
+  .newsletter-literary p {
+    font-size: 19px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .newsletter-literary p.subtle {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  .newsletter-inline-form {
+    display: flex;
+    gap: 0;
+    margin-top: 28px;
+    border-bottom: 1px solid var(--text);
+    align-items: baseline;
+  }
+  .newsletter-inline-form input {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 20px;
+    outline: none;
+    min-width: 0;
+  }
+  .newsletter-inline-form input::placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .newsletter-inline-form button {
+    padding: 14px 4px;
+    background: transparent;
+    color: var(--accent);
+    border: none;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 200ms;
+    white-space: nowrap;
+  }
+  .newsletter-inline-form button:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 4px; }
+  .newsletter-note {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+
+  /* ==========================================================
+     WERSJE — teaser + pełna podstrona
+     ========================================================== */
+  .wersje-teaser {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .wersje-teaser { grid-template-columns: 1fr 2fr; gap: 80px; }
+  }
+  .wersje-cover {
+    aspect-ratio: 2/3;
+    background: var(--bg-alt);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 28px;
+    padding: 40px;
+    text-align: center;
+  }
+  .wersje-text h3 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 768px) { .wersje-text h3 { font-size: 34px; } }
+  .wersje-text p { color: var(--text-secondary); margin-bottom: 20px; }
+
+  .wersje-status {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--accent);
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .wersje-fragment {
+    max-width: var(--reading-w);
+    margin: 64px auto 0;
+    padding: 40px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .wersje-fragment p { margin-bottom: 20px; font-size: 19px; }
+  .wersje-fragment .fragment-label {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  /* ==========================================================
+     ABOUT
+     ========================================================== */
+  section.about-preview { padding: 96px 0; background: var(--bg-alt); }
+  .about-grid { display: grid; gap: 48px; align-items: start; }
+  @media (min-width: 900px) {
+    .about-grid { grid-template-columns: 2fr 3fr; gap: 80px; }
+  }
+  .about-portrait {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--bg);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    padding: 24px;
+    text-align: center;
+  }
+  .about-text h2 {
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  @media (min-width: 768px) { .about-text h2 { font-size: 48px; } }
+  .about-text p { margin-bottom: 18px; color: var(--text); }
+
+  /* ==========================================================
+     FOOTER
+     ========================================================== */
+  footer.site {
+    padding: 72px 0 40px;
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+  }
+  .footer-grid { display: grid; gap: 40px; }
+  @media (min-width: 768px) {
+    .footer-grid { grid-template-columns: 2fr 1fr 1fr; gap: 56px; }
+  }
+  footer.site h4 {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 500;
+    font-style: italic;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  footer.site p, footer.site a {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  footer.site p { margin-bottom: 4px; }
+  footer.site a { text-decoration: none; display: block; margin-bottom: 2px; }
+  footer.site a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+
+  .footer-bottom {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    padding: 0;
+    cursor: pointer;
+    transition: color 200ms;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    margin-top: 6px;
+  }
+  .theme-toggle:hover { color: var(--accent); }
+
+  /* ==========================================================
+     SEKCJE NA PODGLĄDZIE — etykiety widoków
+     (Usuwane przez Claude Code. Tutaj pomagają czytać plik.)
+     ========================================================== */
+  .view-sep {
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  /* Motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Przejdź do treści</a>
+
+<!-- ========== HEADER (globalny) ========== -->
+<header class="site">
+  <div class="container inner">
+    <a href="#home" class="wordmark">Marcin Szmidtke</a>
+    <nav class="primary" aria-label="Główna">
+      <ul>
+        <li><a href="#blog">Piszę</a></li>
+        <li><a href="#about">O mnie</a></li>
+        <li><a href="#wersje">Wersje</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ========== 1. HOME ========== -->
+<div class="view-sep">HOME · /</div>
+
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-wrap">
+      <div class="hero-portrait">
+        Portret główny · 800 × 1000<br>(asymetria, miękki cień)
+      </div>
+      <div class="hero-text-wrap">
+        <h1 class="hero-statement">
+          Nie mam gotowych odpowiedzi. Piszę, żeby po drodze zauważać więcej.
+        </h1>
+        <div class="hero-sub">
+          Marcin Szmidtke — piszę, prowadzę zespół, działam w&nbsp;Fundacji Pomocja.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ornament" aria-hidden="true">· · ·</div>
+
+<section class="block" id="blog-preview">
+  <div class="container reading">
+    <h2 class="section-title">Ostatnie teksty</h2>
+
+    <article class="post-preview">
+      <div class="post-meta meta">18 kwietnia 2026 — esej</div>
+      <h3><a href="#post">Pasywność, która wygląda jak odpoczynek</a></h3>
+      <p class="lead">Długo myślałem, że weekend to odpoczynek. Okazało się, że weekend to chowanie się przed tygodniem. Różnica jest niewielka, ale decyduje o wszystkim.</p>
+      <a href="#post" class="read-more">sześć minut czytania →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">11 kwietnia 2026 — obserwacja</div>
+      <h3><a href="#post">Mój doradca przyniósł problem, który nie był jego</a></h3>
+      <p class="lead">Przyszedł z pytaniem o klienta. Po czterdziestu minutach okazało się, że klient był pretekstem. Potrzebował powiedzieć to komuś, żeby zobaczyć.</p>
+      <a href="#post" class="read-more">cztery minuty czytania →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">4 kwietnia 2026 — fragment</div>
+      <h3><a href="#post">Wersje — fragment z rozdziału czwartego</a></h3>
+      <p class="lead">Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu.</p>
+      <a href="#post" class="read-more">trzy minuty czytania →</a>
+    </article>
+
+    <a href="#blog" class="all-posts-link">wszystkie teksty →</a>
+  </div>
+</section>
+
+<div class="ornament" aria-hidden="true">· · ·</div>
+
+<section class="newsletter-section" id="newsletter">
+  <div class="container">
+    <div class="newsletter-literary">
+      <h3>List co dwa tygodnie</h3>
+      <p>Piszę list raz na dwa tygodnie. Krótszy niż teksty na stronie, bardziej z kuchni. Jeśli chcesz go dostawać — zostaw adres.</p>
+      <p class="subtle">Bez automatów. Odpisać możesz zawsze — piszę sam.</p>
+      <form class="newsletter-inline-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='— jest, do czwartku.'">
+        <label for="nl-email" class="sr-only" style="position:absolute;left:-9999px;">Twój adres e-mail</label>
+        <input id="nl-email" type="email" placeholder="twój adres…" required />
+        <button type="submit">zapisz →</button>
+      </form>
+      <div class="newsletter-note">Wypisać się można jednym kliknięciem.</div>
+    </div>
+  </div>
+</section>
+
+<div class="ornament" aria-hidden="true">· · ·</div>
+
+<section class="block">
+  <div class="container wide">
+    <div class="wersje-teaser">
+      <div class="wersje-cover">
+        <em>Wersje</em>
+      </div>
+      <div class="wersje-text">
+        <h3>Piszę powieść. Nazywa się <em>Wersje</em>.</h3>
+        <p>Powieść o kimś, kogo nosi przez jego własne wzorce — i&nbsp;o&nbsp;tym, jak powoli uczy się to zauważyć. O czterdziestce, na której niektóre rzeczy zaczyna się widzieć dopiero wtedy, kiedy już nie można ich cofnąć.</p>
+        <a href="#wersje" class="read-more">więcej o książce →</a>
+        <div><span class="wersje-status">rękopis w redakcji</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 2. BLOG LIST ========== -->
+<div class="view-sep">LISTA WPISÓW · /blog</div>
+
+<section class="blog-header">
+  <div class="container reading">
+    <h1>Piszę</h1>
+    <p class="subtitle">O pasywności, schematach, drodze bez mety. Jeden tekst w tygodniu, czasem rzadziej.</p>
+    <nav class="blog-filter" aria-label="Filtr kategorii">
+      <a href="#blog" aria-current="page">wszystko</a>
+      <a href="#blog">esej</a>
+      <a href="#blog">obserwacja</a>
+      <a href="#blog">fragment</a>
+      <a href="#blog">zespół</a>
+    </nav>
+  </div>
+</section>
+
+<section class="block" id="blog">
+  <div class="container reading">
+
+    <article class="post-preview">
+      <div class="post-meta meta">18 kwietnia 2026 — esej, sześć minut</div>
+      <h3><a href="#post">Pasywność, która wygląda jak odpoczynek</a></h3>
+      <p class="lead">Długo myślałem, że weekend to odpoczynek. Okazało się, że weekend to chowanie się przed tygodniem. Różnica jest niewielka, ale decyduje o wszystkim.</p>
+      <a href="#post" class="read-more">czytaj →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">11 kwietnia 2026 — obserwacja, cztery minuty</div>
+      <h3><a href="#post">Mój doradca przyniósł problem, który nie był jego</a></h3>
+      <p class="lead">Przyszedł z pytaniem o klienta. Po czterdziestu minutach okazało się, że klient był pretekstem. Potrzebował powiedzieć to komuś, żeby zobaczyć.</p>
+      <a href="#post" class="read-more">czytaj →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">4 kwietnia 2026 — fragment, trzy minuty</div>
+      <h3><a href="#post">Wersje — fragment z rozdziału czwartego</a></h3>
+      <p class="lead">Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu.</p>
+      <a href="#post" class="read-more">czytaj →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">28 marca 2026 — esej, pięć minut</div>
+      <h3><a href="#post">Nie jestem Markiem Aureliuszem. Jestem facetem na łóżku.</a></h3>
+      <p class="lead">Stoicy pomagają rano. Wieczorem pomaga mi raczej to, że ktoś jeszcze jest w pokoju. Różnica jest banalna i decydująca.</p>
+      <a href="#post" class="read-more">czytaj →</a>
+    </article>
+
+    <article class="post-preview">
+      <div class="post-meta meta">21 marca 2026 — zespół, siedem minut</div>
+      <h3><a href="#post">Co się dzieje, kiedy pracownik mówi „u mnie wszystko gra"</a></h3>
+      <p class="lead">W większości przypadków nic nie gra. To jest grzeczność, nie komunikat. Nauczyłem się słyszeć to dopiero wtedy, kiedy sam zacząłem tak mówić.</p>
+      <a href="#post" class="read-more">czytaj →</a>
+    </article>
+
+    <div class="pagination">
+      <span class="disabled">← poprzednie</span>
+      <a href="#blog">kolejne 10 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 3. POJEDYNCZY WPIS ========== -->
+<div class="view-sep">POJEDYNCZY WPIS · /blog/pasywnosc-ktora-wyglada-jak-odpoczynek</div>
+
+<section class="post-block" id="post">
+  <div class="container">
+    <article class="post-single">
+      <div class="meta">18 kwietnia 2026 — esej, sześć minut</div>
+      <h1>Pasywność, która wygląda jak odpoczynek</h1>
+      <p class="lead-para">
+        Długo myślałem, że weekend to odpoczynek. Okazało się, że weekend to chowanie się przed tygodniem. Różnica jest niewielka, ale decyduje o wszystkim.
+      </p>
+
+      <p class="has-dropcap">
+        Kiedy w piątek wieczorem zamykałem laptopa, robiłem trzy rzeczy w tej kolejności: otwierałem piwo, włączałem serial, sprawdzałem telefon. Nie zauważyłem tej sekwencji przez dziesięć lat. Potem zauważyłem, bo ktoś mi pokazał.
+      </p>
+
+      <p>
+        Ta sekwencja nie była odpoczynkiem. Była obezwładnieniem przed pustką, która pojawia się, kiedy przestajesz pracować. Pustka jest uczciwa — mówi, że trzeba coś zrobić z życiem. Piwo, serial i telefon mówią, że nie trzeba. Że wystarczy przetrwać do poniedziałku.
+      </p>
+
+      <blockquote>
+        Pasywność w takiej formie nie ma ciężaru. Jest lekka, przyjemna, nie wymaga decyzji. Dlatego jest najtrudniejsza do zauważenia.
+      </blockquote>
+
+      <p>
+        Pracuję nad tym, żeby zauważać, kiedy sięgam po pilota nie dlatego, że chcę serialu, tylko dlatego, że nie chcę być tu, gdzie jestem. To nie jest wielka praca. Trwa sekundę. Ale bez niej wracam do sekwencji.
+      </p>
+
+      <div class="inline-image">obraz inline · 1360 × 900 (opcjonalny)</div>
+      <div class="inline-image-caption">Biurko, niedzielny poranek. Notatka do tego tekstu.</div>
+
+      <p>
+        Czasem myślę, że na uważność nie trzeba żadnego programu. Wystarczy zauważyć jedną rzecz dziennie, której się nie zauważało. Z czasem robi się tego więcej. Potem znowu mniej. Nie jest to linia prosta, ale jest jakaś.
+      </p>
+
+      <h3>Co z tego wynika</h3>
+      <p>
+        Nie planuję przestać oglądać seriali. Nie zamieniłem piwa na herbatę. Zauważam tylko, że te rzeczy mają swoje miejsce — i kiedy wychodzą poza swoje miejsce, robi się z nich coś innego niż odpoczynek. I że to „coś innego" rzadko bywa zauważone samo z siebie.
+      </p>
+    </article>
+
+    <div class="post-footer">
+      <p class="inline-optin">
+        Jeśli chcesz dostawać nowe teksty e-mailem — <a href="#newsletter">list co dwa tygodnie</a>. Bez automatów.
+      </p>
+      <div class="related">
+        <h4>zobacz też</h4>
+        <a href="#post">Mój doradca przyniósł problem, który nie był jego</a>
+        <a href="#post">Nie jestem Markiem Aureliuszem. Jestem facetem na łóżku.</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4. O MNIE ========== -->
+<div class="view-sep">O MNIE · /o-mnie</div>
+
+<section class="about-preview" id="about">
+  <div class="container wide">
+    <div class="about-grid">
+      <div class="about-portrait">
+        Portret drugi · 1200 × 1600<br>(nieformalny)
+      </div>
+      <div class="about-text">
+        <h2>O mnie</h2>
+        <p>Zacząłem pisać, kiedy zorientowałem się, że dużo robię, żeby nie myśleć. Że skuteczność — zespół pod sobą, dowożone cele, fundacja, dziecko, kolejny trening — jest drogą ucieczki tak samo dobrą jak każda inna. Nie przestałem działać. Zacząłem obok działania zapisywać, co po drodze zauważam.</p>
+        <p>Ta strona to zbiór tych zapisów.</p>
+        <p>Nie jest to poradnik, jak żyć lepiej — nie mam tej wiedzy. Nie jest to blog motywacyjny — motywacji mam aż za dużo, problem mam raczej z tym, co pod motywacją. Jest to raczej notes pisany głośno. O pasywności, która wygląda jak odpoczynek, ale nim nie jest. O schematach, w które wracasz mimo że je rozpoznajesz. O zarządzaniu ludźmi, kiedy samemu jesteś w środku rozjebany. O ojcostwie, które zaczyna się długo po narodzinach dziecka.</p>
+        <p>Piszę dla faceta, który z zewnątrz dowozi, a w środku nosi pytania, których nie zadaje kolegom. Jeśli to ty — zostań.</p>
+        <p>Poza pisaniem prowadzę zespół. Jestem członkiem Fundacji Pomocja, gdzie współprowadzimy projekt Młody Ojciec — wsparcie dla mężczyzn wchodzących w rolę, której nikt nie szkoli. Kończę powieść <em>Wersje</em>. Czasem rysuję kredkami. Kiedyś biegałem długie dystanse — to raczej mówi o tym, co we mnie nie było w porządku, niż o sporcie.</p>
+        <p>Jeśli chcesz czytać regularnie — <a href="#newsletter">zapisz się do newslettera</a>. Jeśli chcesz coś powiedzieć — odpisz na pierwszy list, który przyjdzie. Piszę sam.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5. WERSJE ========== -->
+<div class="view-sep">WERSJE · /wersje</div>
+
+<section class="block" id="wersje">
+  <div class="container wide">
+    <div class="wersje-teaser">
+      <div class="wersje-cover">
+        <em>Wersje</em><br><br><span style="font-size:18px;">M. Szmidtke</span>
+      </div>
+      <div class="wersje-text">
+        <h3><em>Wersje</em> to powieść o kimś, kogo nosi przez jego własne wzorce — i&nbsp;o&nbsp;tym, jak powoli uczy się to zauważyć.</h3>
+        <p>Książka o pasywności, która wygląda jak normalne życie. O ludziach, w których jest się zaplątanym zanim się zrozumie, o co chodzi. O czterdziestce, na której niektóre rzeczy zaczyna się widzieć dopiero wtedy, kiedy już nie można ich cofnąć.</p>
+        <p>Piszę ją od czterech lat. Teraz — rękopis w redakcji. Fragmenty pojawiają się tutaj, na stronie, zanim książka trafi do wydawcy.</p>
+        <div><span class="wersje-status">rękopis w redakcji</span></div>
+      </div>
+    </div>
+
+    <div class="wersje-fragment">
+      <div class="fragment-label">fragment z rozdziału czwartego</div>
+      <p>Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu, jak kubek postawiony dzień wcześniej w innym miejscu, o którym zapomniał, ale który rano był tam, gdzie zawsze, jakby nigdy nie wędrował.</p>
+      <p>Wstał wcześnie. Zrobił kawę. Nie wspomniał jej o tym, co powiedziała wieczorem. Ona też nie wspomniała. To nie było zawieszenie broni — raczej uznanie, że broń była wymyślona, że nic się nie zdarzyło, że rozmowa nie była rozmową, tylko pogodą.</p>
+      <p>Miał wrażenie, że znowu coś zmienił w sobie, żeby pasowało. I miał wrażenie, że nie umiałby powiedzieć, co konkretnie.</p>
+    </div>
+  </div>
+</section>
+
+<div class="ornament" aria-hidden="true">· · ·</div>
+
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-literary">
+      <h3>Chcesz wiedzieć, kiedy ukaże się <em>Wersje</em>?</h3>
+      <p>Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy.</p>
+      <form class="newsletter-inline-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='— dam znać.'">
+        <input type="email" placeholder="twój adres…" required />
+        <button type="submit">zapisz →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>O stronie</h4>
+        <p>Pisze Marcin Szmidtke.</p>
+        <p>Strona nie używa trackerów, reklam ani cookie. Po prostu tekst.</p>
+      </div>
+      <div>
+        <h4>Nawigacja</h4>
+        <a href="#blog">piszę</a>
+        <a href="#about">o mnie</a>
+        <a href="#wersje">wersje</a>
+        <a href="#newsletter">newsletter</a>
+        <a href="#">rss</a>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <a href="mailto:kontakt@szmidtke.pl">kontakt@szmidtke.pl</a>
+        <a href="#">linkedin</a>
+        <button class="theme-toggle" onclick="toggleTheme()">tryb ciemny ↺</button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Marcin Szmidtke</span>
+      <span>zbudowane w Astro · źródła na GitHubie</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    if (next === 'light') html.removeAttribute('data-theme');
+    else html.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    const btn = document.querySelector('.theme-toggle');
+    if (btn) btn.textContent = next === 'dark' ? 'tryb jasny ↺' : 'tryb ciemny ↺';
+  }
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      const btn = document.querySelector('.theme-toggle');
+      if (btn) btn.textContent = 'tryb jasny ↺';
+    }
+  } catch (e) {}
+</script>
+
+</body>
+</html>
