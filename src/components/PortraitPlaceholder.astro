@@ -1,0 +1,41 @@
+---
+// Placeholder portretu — SVG inline z ramką i tekstem.
+// Podmieniany na <SmartImage> w iteracji 7.
+
+interface Props {
+  ratio?: '4/5' | '3/4' | '2/3' | '16/9';
+  label?: string;
+  width?: string;
+  className?: string;
+}
+
+const { ratio = '4/5', label = 'portret', width = '100%', className = '' } = Astro.props;
+---
+
+<div
+  class={`portrait-placeholder ${className}`}
+  style={`aspect-ratio: ${ratio}; width: ${width};`}
+  role="img"
+  aria-label={label}
+>
+  <span>{label}</span>
+</div>
+
+<style>
+  .portrait-placeholder {
+    background: var(--bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    text-align: center;
+    padding: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.04);
+  }
+  html[data-theme="dark"] .portrait-placeholder {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+</style>

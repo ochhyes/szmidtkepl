@@ -1,20 +1,94 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PostCard from '../components/PostCard.astro';
+import NewsletterInline from '../components/NewsletterInline.astro';
+import WersjeTeaser from '../components/WersjeTeaser.astro';
+import Ornament from '../components/Ornament.astro';
 
-// Placeholder Home — iteracja 1. Pełna strona główna wchodzi w iteracji 2.
+// Mockowe wpisy — iteracja 2. W iteracji 3 będą czytane z content collection.
+const mockPosts = [
+  {
+    href: '/blog/pasywnosc-ktora-wyglada-jak-odpoczynek',
+    title: 'Pasywność, która wygląda jak odpoczynek',
+    lead: 'Długo myślałem, że weekend to odpoczynek. Okazało się, że weekend to chowanie się przed tygodniem. Różnica jest niewielka, ale decyduje o wszystkim.',
+    date: '2026-04-18',
+    category: 'esej',
+    readingTime: 'sześć minut',
+  },
+  {
+    href: '/blog/doradca-problem-ktory-nie-byl-jego',
+    title: 'Mój doradca przyniósł problem, który nie był jego',
+    lead: 'Przyszedł z pytaniem o klienta. Po czterdziestu minutach okazało się, że klient był pretekstem. Potrzebował powiedzieć to komuś, żeby zobaczyć.',
+    date: '2026-04-11',
+    category: 'obserwacja',
+    readingTime: 'cztery minuty',
+  },
+  {
+    href: '/blog/wersje-fragment-rozdzial-czwarty',
+    title: 'Wersje — fragment z rozdziału czwartego',
+    lead: 'Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu.',
+    date: '2026-04-04',
+    category: 'fragment',
+    readingTime: 'trzy minuty',
+  },
+];
 ---
 
 <BaseLayout
   title="Marcin Szmidtke"
   description="Piszę o pasywności, schematach, drodze bez mety. Prowadzę zespół, działam w Fundacji Pomocja."
 >
-  <section class="block">
+  <Hero
+    statement="Nie mam gotowych odpowiedzi. Piszę, żeby po drodze zauważać więcej."
+    sub="Marcin Szmidtke — piszę, prowadzę zespół, działam w&nbsp;Fundacji Pomocja."
+  />
+
+  <Ornament />
+
+  <section class="block" id="blog-preview">
     <div class="container reading">
-      <h1 style="font-size: 40px; margin: 48px 0 16px;">Tu wejdzie Home.</h1>
-      <p style="color: var(--text-secondary); font-style: italic;">
-        Placeholder po iteracji 1 — layout shell działa, motyw jasny/ciemny działa,
-        skip-link i hamburger działają. Treść Home w iteracji 2.
-      </p>
+      <h2 class="section-title">Ostatnie teksty</h2>
+      {mockPosts.map((post) => (
+        <PostCard
+          href={post.href}
+          title={post.title}
+          lead={post.lead}
+          date={post.date}
+          category={post.category}
+          readingTime={post.readingTime}
+          variant="home"
+        />
+      ))}
+      <a href="/blog" class="all-posts-link">wszystkie teksty →</a>
+    </div>
+  </section>
+
+  <Ornament />
+
+  <NewsletterInline variant="default" id="newsletter" />
+
+  <Ornament />
+
+  <section class="block">
+    <div class="container wide">
+      <WersjeTeaser variant="home" />
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .all-posts-link {
+    display: inline-block;
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-style: italic;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .all-posts-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

@@ -1,0 +1,171 @@
+---
+// Newsletter inline literacki — bez boxa. Spec §5.2/§5.6.
+// Wariant 'default' (Home) i 'wersje' (strona Wersje).
+// Submit bez backendu — fetch do /api/subscribe wejdzie w iteracji 5;
+// tu jeszcze tylko podmiana tekstu buttona (event.preventDefault).
+
+interface Props {
+  variant?: 'default' | 'wersje';
+  id?: string;
+}
+
+const { variant = 'default', id = 'newsletter' } = Astro.props;
+
+const copy = variant === 'wersje'
+  ? {
+      heading: 'Chcesz wiedzieć, kiedy ukaże się <em>Wersje</em>?',
+      lead: 'Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy.',
+      subtle: null,
+      successText: '— dam znać.',
+    }
+  : {
+      heading: 'List co dwa tygodnie',
+      lead: 'Piszę list raz na dwa tygodnie. Krótszy niż teksty na stronie, bardziej z kuchni. Jeśli chcesz go dostawać — zostaw adres.',
+      subtle: 'Bez automatów. Odpisać możesz zawsze — piszę sam.',
+      successText: '— jest, do czwartku.',
+    };
+---
+
+<section class="newsletter-section" id={id}>
+  <div class="container">
+    <div class="newsletter-literary">
+      <h3 set:html={copy.heading} />
+      <p>{copy.lead}</p>
+      {copy.subtle && <p class="subtle">{copy.subtle}</p>}
+
+      <form
+        class="newsletter-inline-form"
+        action="mailto:kontakt@szmidtke.pl"
+        method="get"
+        data-newsletter-form
+        data-success-text={copy.successText}
+      >
+        <label for={`${id}-email`} class="sr-only">Twój adres e-mail</label>
+        <input id={`${id}-email`} name="email" type="email" placeholder="twój adres…" required autocomplete="email" />
+        <!-- honeypot (iteracja 5) — hidden input, zostawiony tu żeby nie zmieniać layoutu potem -->
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+        <button type="submit">zapisz →</button>
+      </form>
+      <div class="newsletter-note" aria-live="polite" data-newsletter-note>
+        Wypisać się można jednym kliknięciem.
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const forms = document.querySelectorAll('[data-newsletter-form]');
+    forms.forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const button = form.querySelector('button');
+        const input = form.querySelector('input[type="email"]');
+        const successText = form.dataset.successText || '— jest, do czwartku.';
+        if (button) button.textContent = successText;
+        if (input) {
+          input.value = '';
+          input.setAttribute('disabled', '');
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .newsletter-section { padding: 96px 0; }
+  .newsletter-literary {
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .newsletter-literary h3 {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 768px) {
+    .newsletter-literary h3 { font-size: 36px; }
+  }
+  .newsletter-literary p {
+    font-size: 19px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+  .newsletter-literary p.subtle {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .newsletter-inline-form {
+    display: flex;
+    gap: 0;
+    margin-top: 28px;
+    border-bottom: 1px solid var(--text);
+    align-items: baseline;
+  }
+  .newsletter-inline-form input[type="email"] {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-serif);
+    font-size: 20px;
+    outline: none;
+    min-width: 0;
+  }
+  .newsletter-inline-form input[type="email"]::placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .newsletter-inline-form input[type="email"]:focus-visible {
+    outline: none;
+    box-shadow: 0 1px 0 var(--accent);
+  }
+  .newsletter-inline-form input[type="email"]:disabled {
+    color: var(--text-muted);
+  }
+
+  .newsletter-inline-form .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .newsletter-inline-form button {
+    padding: 14px 4px;
+    background: transparent;
+    color: var(--accent);
+    border: none;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 200ms;
+    white-space: nowrap;
+  }
+  .newsletter-inline-form button:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .newsletter-inline-form button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .newsletter-note {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+</style>

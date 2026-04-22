@@ -1,0 +1,81 @@
+---
+// Hero strony głównej — asymetryczny, portret wchodzi w warstwę tekstu.
+// Spec §5.2. CSS przeniesiony 1:1 z docs/szmidtke-pl-ux-final.html.
+import PortraitPlaceholder from './PortraitPlaceholder.astro';
+
+interface Props {
+  statement: string;
+  sub: string;
+}
+
+const { statement, sub } = Astro.props;
+---
+
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-wrap">
+      <div class="hero-portrait">
+        <PortraitPlaceholder ratio="4/5" label="Portret główny · 800 × 1000" />
+      </div>
+      <div class="hero-text-wrap">
+        <h1 class="hero-statement">{statement}</h1>
+        <div class="hero-sub" set:html={sub} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding: 72px 0 120px; position: relative; }
+  @media (min-width: 768px) {
+    .hero { padding: 112px 0 160px; }
+  }
+
+  .hero-wrap { position: relative; max-width: 1100px; margin: 0 auto; }
+
+  .hero-portrait {
+    position: relative;
+    width: 320px;
+    margin-bottom: -80px;
+    margin-left: 0;
+  }
+  @media (min-width: 900px) {
+    .hero-portrait {
+      margin-left: 40px;
+      margin-bottom: -120px;
+      width: 380px;
+    }
+  }
+
+  .hero-text-wrap {
+    padding-top: 40px;
+    padding-left: 24px;
+  }
+  @media (min-width: 900px) {
+    .hero-text-wrap {
+      padding-top: 0;
+      padding-left: 440px;
+    }
+  }
+
+  .hero-statement {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+  @media (min-width: 768px) {
+    .hero-statement { font-size: 62px; }
+  }
+
+  .hero-sub {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 520px;
+    line-height: 1.5;
+  }
+</style>

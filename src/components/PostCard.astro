@@ -1,0 +1,96 @@
+---
+// Karta wpisu w feedzie — meta italic → H3 link → lead → read-more.
+// Używane na Home (§5.2) i na /blog (§5.3). variant steruje tekstem read-more.
+
+interface Props {
+  href: string;
+  title: string;
+  lead: string;
+  date: Date | string;
+  category: string;
+  readingTime: string;
+  variant?: 'home' | 'list';
+}
+
+const {
+  href,
+  title,
+  lead,
+  date,
+  category,
+  readingTime,
+  variant = 'home',
+} = Astro.props;
+
+const d = typeof date === 'string' ? new Date(date) : date;
+const formattedDate = d.toLocaleDateString('pl-PL', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const meta = variant === 'home'
+  ? `${formattedDate} — ${category}`
+  : `${formattedDate} — ${category}, ${readingTime}`;
+
+const readMore = variant === 'home'
+  ? `${readingTime} czytania →`
+  : 'czytaj →';
+---
+
+<article class="post-preview">
+  <div class="post-meta meta">{meta}</div>
+  <h3><a href={href}>{title}</a></h3>
+  <p class="lead">{lead}</p>
+  <a href={href} class="read-more">{readMore}</a>
+</article>
+
+<style>
+  .post-preview {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .post-preview:first-of-type { padding-top: 0; }
+  .post-preview:last-of-type { border-bottom: none; }
+
+  .post-meta { margin-bottom: 10px; }
+
+  .post-preview h3 {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  @media (min-width: 768px) {
+    .post-preview h3 { font-size: 32px; }
+  }
+  .post-preview h3 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .post-preview h3 a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .post-preview .lead {
+    color: var(--text-secondary);
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: 620px;
+  }
+
+  .read-more {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .read-more:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
