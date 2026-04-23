@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const versionDate = '2026-04-23';
+---
+
+<BaseLayout
+  title="Prywatność — Marcin Szmidtke"
+  description="Jak dbam o twoje dane na szmidtke.pl. Pisane po ludzku, bez prawniczego boilerplatu."
+>
+  <section class="block">
+    <div class="container reading">
+      <article class="prose">
+        <h1>Prywatność</h1>
+        <p class="lead">
+          Pisane po ludzku, nie przez prawnika. Jeśli coś jest niejasne — napisz, poprawię.
+        </p>
+
+        <h2>Co tu zbieram</h2>
+        <p>
+          Zbieram twój adres email, jeśli zapisujesz się do newslettera. Nic poza tym.
+          Bez cookies. Bez trackerów. Bez reklam. Bez pixeli Facebooka ani Google Analytics.
+        </p>
+
+        <h2>Po co</h2>
+        <p>
+          Po to, żeby wysłać ci list raz na dwa tygodnie. Tylko po to.
+          Nie sprzedam twojego adresu, nie użyję go do niczego innego, nie podepnę do żadnego systemu marketingowego.
+        </p>
+
+        <h2>Kto przetwarza</h2>
+        <p>
+          Administratorem danych jestem ja, <strong>Marcin Szmidtke</strong>.
+          Kontakt: <a href="mailto:kontakt@szmidtke.pl">kontakt@szmidtke.pl</a>.
+        </p>
+        <p>
+          Do wysyłania newslettera używam <strong>Buttondown Inc.</strong> (USA) jako podmiotu przetwarzającego.
+          Transfer danych do USA odbywa się na podstawie standardowych klauzul umownych (SCC).
+          Polityka prywatności Buttondown: <a href="https://buttondown.com/privacy" rel="noopener" target="_blank">buttondown.com/privacy</a>.
+        </p>
+
+        <h2>Twoje prawa</h2>
+        <p>
+          Masz prawo do:
+        </p>
+        <ul>
+          <li>wglądu w dane, które o tobie mam (w praktyce: tylko twój email),</li>
+          <li>sprostowania, jeśli coś jest nie tak,</li>
+          <li>usunięcia — jednym kliknięciem w stopce dowolnego listu lub mailem do mnie,</li>
+          <li>sprzeciwu wobec przetwarzania,</li>
+          <li>przenoszenia danych.</li>
+        </ul>
+        <p>
+          Najszybciej: napisz na <a href="mailto:kontakt@szmidtke.pl">kontakt@szmidtke.pl</a>
+          albo kliknij „wypisz" w stopce dowolnego newslettera.
+        </p>
+
+        <h2>Jak długo trzymam</h2>
+        <p>
+          Dopóki nie wypiszesz się. Po wypisaniu Buttondown trzyma twój adres przez około 30 dni
+          na tzw. <em>suppression list</em> — po to, żeby przypadkiem nie wysłać ci tego samego newslettera
+          z innego konta. Po tym okresie adres jest usuwany.
+        </p>
+
+        <h2>Co jeśli zmienię politykę</h2>
+        <p>
+          Napiszę o tym w newsletterze. Data i numer wersji są na końcu tej strony.
+          Jeśli zmiana będzie istotna — dostaniesz osobny list, nie tylko notkę w stopce.
+        </p>
+
+        <h2>Skarga</h2>
+        <p>
+          Jeśli uważasz, że przetwarzam twoje dane niezgodnie z prawem,
+          masz prawo złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych:
+          <a href="https://uodo.gov.pl" rel="noopener" target="_blank">uodo.gov.pl</a>.
+        </p>
+
+        <p class="version">
+          Wersja 1, {versionDate}. Pisane po ludzku.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding: 80px 0 96px; }
+
+  .prose h1 {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    .prose h1 { font-size: 60px; }
+  }
+
+  .prose .lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .prose h2 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .prose p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  .prose ul {
+    margin: 0 0 18px;
+    padding-left: 24px;
+  }
+  .prose li {
+    font-size: 19px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .prose a:hover {
+    color: var(--accent-hover);
+  }
+
+  .prose .version {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+</style>
