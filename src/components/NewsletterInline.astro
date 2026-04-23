@@ -46,9 +46,11 @@ const copy = variant === 'nie-ja'
         <button type="submit">zapisz →</button>
       </form>
 
-      <div class="newsletter-note" aria-live="polite" data-newsletter-note>
-        Wypisać się można jednym kliknięciem.
-      </div>
+      <p class="newsletter-consent">
+        Zapisując się, akceptujesz <a href="/prywatnosc">politykę prywatności</a>. Wypisać się można jednym kliknięciem.
+      </p>
+
+      <div class="newsletter-note" aria-live="polite" data-newsletter-note></div>
     </div>
   </div>
 </section>
@@ -83,10 +85,11 @@ const copy = variant === 'nie-ja'
           const data = await resp.json().catch(() => ({ ok: false }));
 
           if (data.ok) {
+            // TODO iter 13: redirect na /zapisany po sukcesie
             button.textContent = successText;
             input.value = '';
             input.disabled = true;
-            if (note) note.textContent = 'Potwierdzenie przyjdzie zaraz na adres.';
+            if (note) note.textContent = 'Pierwszy mail z linkiem do potwierdzenia powinien przyjść w ciągu kilku minut.';
           } else {
             button.textContent = originalBtn;
             button.disabled = false;
@@ -203,12 +206,36 @@ const copy = variant === 'nie-ja'
     border-radius: 2px;
   }
 
-  .newsletter-note {
+  .newsletter-consent {
     margin-top: 16px;
     font-size: 14px;
     color: var(--text-muted);
     font-style: italic;
     font-family: var(--font-serif);
+    line-height: 1.6;
+  }
+  .newsletter-consent a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .newsletter-consent a:hover {
+    color: var(--accent);
+  }
+
+  .newsletter-note {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+    line-height: 1.6;
+    min-height: 1.6em;
+  }
+  .newsletter-note:empty {
+    margin-top: 0;
+    min-height: 0;
   }
   .newsletter-note.error {
     color: var(--error);

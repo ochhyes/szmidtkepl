@@ -127,7 +127,7 @@ function respond(isForm: boolean, outcome: Outcome, status: number): Response {
 function htmlFallback(outcome: Outcome, status: number): Response {
   const title = outcome.ok ? 'Zapisany' : 'Coś się zacięło';
   const message = outcome.ok
-    ? 'Dziękuję. List przyjdzie co dwa tygodnie. Bez automatów — piszę sam.'
+    ? 'Dziękuję. Pierwszy mail z linkiem do potwierdzenia powinien przyjść w ciągu kilku minut. Kliknij, żeby list zaczął chodzić.'
     : outcome.error === 'invalid_email'
       ? 'To chyba nie jest poprawny adres. Wróć i spróbuj jeszcze raz.'
       : outcome.error === 'rate_limited'
