@@ -25,6 +25,8 @@ const {
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://szmidtke.pl';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
+// OG default z satori-generated /og-default.png (spec §11).
+// Per-wpis OG przekazywany jawnie (patrz [...slug].astro).
 const ogImageUrl = ogImage ?? new URL('/og-default.png', siteUrl).toString();
 const fullTitle = title.includes('Marcin Szmidtke') ? title : `${title} — Marcin Szmidtke`;
 

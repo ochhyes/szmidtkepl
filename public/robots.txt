@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Nie indeksujemy endpointu API (i tak POST-only, ale pewniak).
+Disallow: /api/
+
+Sitemap: https://szmidtke.pl/sitemap-index.xml
