@@ -42,8 +42,11 @@ html[data-theme="dark"] {
   --border: #332E28;
 }
 
+/* OS=dark respektowany tylko gdy user nie wybrał jawnie "light".
+   Gdy data-theme="light" (świadomy wybór), @media poniżej nie łapie
+   i tokeny z :root (light) przeciągają. */
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme]) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) {
     --bg: #1A1714;
     --bg-alt: #231F1B;
     --text: #EAE4DA;
@@ -52,6 +55,9 @@ html[data-theme="dark"] {
     --accent: #C88A7A;
     --accent-hover: #DDA598;
     --border: #332E28;
+  }
+  html:not([data-theme="light"]):not([data-theme="dark"]) body {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.8 0 0 0 0 0.75 0 0 0 0 0.7 0 0 0 0.02 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 }
 
@@ -324,7 +330,7 @@ footer.site {
 @media (min-width: 768px) {
   .footer-grid { grid-template-columns: 2fr 1fr 1fr; gap: 56px; }
 }
-footer.site h4 {
+footer.site h2 {
   font-family: var(--font-serif);
   font-size: 17px;
   font-weight: 500;

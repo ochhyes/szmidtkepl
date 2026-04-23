@@ -99,25 +99,31 @@ const structuredData = jsonLd ?? defaultJsonLd;
          na podstawie unicode-range w pobieranym CSS — nie trzeba jawnego parametru. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Non-blocking font CSS: `rel="preload"` pobiera bez blokowania renderu,
+         onload zamienia na stylesheet. `<noscript>` to fallback bez JS.
+         font-display: swap z Google Fonts zapobiega FOIT. -->
     <link
       rel="preload"
       as="style"
       href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
-      rel="stylesheet"
-    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
+      />
+    </noscript>
 
-    <!-- Inline theme setter — ustawia data-theme przed paintem (no FOUC) -->
+    <!-- Inline theme setter — ustawia data-theme przed paintem (no FOUC).
+         Zawsze jawny atrybut ('dark' lub 'light') gdy user wybrał — tylko
+         to pozwala @media (prefers-color-scheme: dark) nie nadpisywać "light". -->
     <script is:inline>
       (() => {
         try {
           const saved = localStorage.getItem('theme');
-          if (saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-          } else if (saved === 'light') {
-            document.documentElement.removeAttribute('data-theme');
+          if (saved === 'dark' || saved === 'light') {
+            document.documentElement.setAttribute('data-theme', saved);
           }
           // Brak saved → zdany na prefers-color-scheme z CSS.
         } catch (e) {}

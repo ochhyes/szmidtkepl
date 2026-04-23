@@ -33,6 +33,14 @@ Thumbs.db
 .cache/
 .tmp/
 
+# playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# lokalne raporty Lighthouse (nie commitujemy — rosną szybko, są dla podglądu)
+lh-*.json
+
 # raw źródła starych tekstów — poza repo; migracja zamknięta (Sprint 2 iter 17 wycofana)
 _archive-raw/
 _archive-offline/

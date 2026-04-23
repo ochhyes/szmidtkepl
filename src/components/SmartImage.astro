@@ -11,6 +11,7 @@ interface Props {
   sizes?: string;
   class?: string;
   loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
   width?: number;
   height?: number;
 }
@@ -24,6 +25,7 @@ const {
   sizes = '(min-width: 900px) 380px, (min-width: 768px) 320px, 280px',
   class: className = '',
   loading = 'lazy',
+  fetchpriority,
   width,
   height,
 } = Astro.props;
@@ -46,6 +48,7 @@ const image = images[key]?.default;
     widths={widths}
     sizes={sizes}
     loading={loading}
+    fetchpriority={fetchpriority}
     width={width}
     height={height}
     class={`smart-image ${className}`}

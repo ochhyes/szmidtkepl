@@ -20,11 +20,13 @@ import SmartImage from '../components/SmartImage.astro';
             alt="Marcin Szmidtke — portret nieformalny"
             ratio="3/4"
             label="Portret drugi · 1200 × 1600"
+            loading="eager"
+            fetchpriority="high"
             sizes="(min-width: 900px) 380px, 100vw"
           />
         </div>
         <div class="about-text">
-          <h2>O mnie</h2>
+          <h1>O mnie</h1>
           {/* [COPY: about] — tu wchodzi tekst About (patrz szmidtke-pl-copy-strona-v1.md, jeśli istnieje) */}
           <p>
             Zacząłem pisać, kiedy zorientowałem się, że dużo robię, żeby nie myśleć.
@@ -81,7 +83,7 @@ import SmartImage from '../components/SmartImage.astro';
   .about-portrait-wrap {
     width: 100%;
   }
-  .about-text h2 {
+  .about-text h1 {
     font-size: 36px;
     font-weight: 500;
     margin-bottom: 24px;
@@ -89,7 +91,7 @@ import SmartImage from '../components/SmartImage.astro';
     line-height: 1.1;
   }
   @media (min-width: 768px) {
-    .about-text h2 { font-size: 48px; }
+    .about-text h1 { font-size: 48px; }
   }
   .about-text p {
     margin-bottom: 18px;

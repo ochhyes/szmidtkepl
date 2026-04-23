@@ -8,13 +8,13 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="footer-grid">
       <div>
-        <h4>O stronie</h4>
+        <h2>O stronie</h2>
         <p>Pisze Marcin Szmidtke.</p>
         <p>Strona nie używa trackerów, reklam ani cookie. Po prostu tekst.</p>
         <a href="/prywatnosc">prywatność</a>
       </div>
       <div>
-        <h4>Nawigacja</h4>
+        <h2>Nawigacja</h2>
         <a href="/blog">piszę</a>
         <a href="/blog/spis">spis</a>
         <a href="/o-mnie">o mnie</a>
@@ -26,10 +26,10 @@ const year = new Date().getFullYear();
         <a href="/atom.xml">atom</a>
       </div>
       <div>
-        <h4>Kontakt</h4>
+        <h2>Kontakt</h2>
         <a href="mailto:kontakt@szmidtke.pl">kontakt@szmidtke.pl</a>
         <a href="https://www.linkedin.com/in/marcin-szmidtke" rel="me noopener">linkedin</a>
-        <button class="theme-toggle" data-theme-toggle aria-label="Przełącz motyw jasny/ciemny">
+        <button class="theme-toggle" data-theme-toggle title="Przełącz motyw jasny/ciemny">
           <span data-theme-label>tryb ciemny ↺</span>
         </button>
       </div>
@@ -47,19 +47,32 @@ const year = new Date().getFullYear();
     const label = document.querySelector('[data-theme-label]');
     if (!btn || !label) return;
 
+    // "Efektywny" motyw: jawny data-theme jeśli user wybrał, w przeciwnym
+    // razie to co OS zgłasza przez prefers-color-scheme. Dzięki temu przy
+    // OS=dark i braku zapisu pierwszy klik naprawdę przełącza na jasny.
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const isEffectivelyDark = () => {
+      const attr = document.documentElement.getAttribute('data-theme');
+      if (attr === 'dark') return true;
+      if (attr === 'light') return false;
+      return mq.matches;
+    };
+
     const sync = () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      label.textContent = isDark ? 'tryb jasny ↺' : 'tryb ciemny ↺';
+      label.textContent = isEffectivelyDark() ? 'tryb jasny ↺' : 'tryb ciemny ↺';
     };
     sync();
 
     btn.addEventListener('click', () => {
-      const html = document.documentElement;
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      if (next === 'light') html.removeAttribute('data-theme');
-      else html.setAttribute('data-theme', 'dark');
+      const next = isEffectivelyDark() ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}
       sync();
+    });
+
+    // OS przełączony w locie (bez zapisu) — odśwież label.
+    mq.addEventListener?.('change', () => {
+      if (!localStorage.getItem('theme')) sync();
     });
   })();
 </script>
