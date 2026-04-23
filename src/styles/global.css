@@ -242,7 +242,7 @@ nav.primary a[aria-current="page"] { color: var(--text); text-decoration: none; 
   border-radius: 2px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 767px) {
   nav.primary { display: none; }
   .hamburger { display: block; }
 }
