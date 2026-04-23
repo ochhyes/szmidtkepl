@@ -79,7 +79,13 @@ const structuredData = jsonLd ?? defaultJsonLd;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Plausible analytics — self-hosted, bez cookies, bez fingerprintu.
-         Skrypt ładowany tylko gdy PUBLIC_PLAUSIBLE_DOMAIN jest ustawiony w env. -->
+         Skrypt ładowany tylko gdy PUBLIC_PLAUSIBLE_DOMAIN jest ustawiony w env.
+         `script.manual.js` nie jest używany — standard `script.js` loguje pageview sam.
+         Custom events (np. "Newsletter Signup" w NewsletterInline.astro) używają
+         globalnego `window.plausible(...)` które `script.js` wystawia domyślnie.
+         Web Vitals — włączyć w panelu Plausible → Site settings → Extensions.
+         Jeśli CE wymaga podmiany skryptu (np. `script.hash.js` na wersję z Web Vitals),
+         docs: https://plausible.io/docs/web-vitals — zmiana src tu. -->
     {plausibleDomain && (
       <script is:inline defer data-domain={plausibleDomain} src="https://analytics.szmidtke.pl/js/script.js"></script>
     )}

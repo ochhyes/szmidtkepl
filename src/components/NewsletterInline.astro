@@ -39,6 +39,7 @@ const copy = variant === 'nie-ja'
         method="post"
         data-newsletter-form
         data-success-text={copy.successText}
+        data-variant={variant}
       >
         <label for={`${id}-email`} class="sr-only">Twój adres e-mail</label>
         <input id={`${id}-email`} name="email" type="email" placeholder="twój adres…" required autocomplete="email" />
@@ -89,6 +90,9 @@ const copy = variant === 'nie-ja'
             input.value = '';
             input.disabled = true;
             if (note) note.textContent = 'Pierwszy mail z linkiem do potwierdzenia powinien przyjść w ciągu kilku minut.';
+            if (typeof window.plausible === 'function') {
+              window.plausible('Newsletter Signup', { props: { variant: form.dataset.variant || 'default' } });
+            }
             setTimeout(() => { window.location.href = '/zapisany'; }, 1500);
           } else {
             button.textContent = originalBtn;

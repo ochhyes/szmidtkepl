@@ -70,6 +70,7 @@ Zachowanie:
 - Błąd walidacji → mikrocopy pod formularzem zmienia się na komunikat błędu.
 - Honeypot (hidden input `website`) chroni przed botami bez palenia klucza API.
 - Fallback bez JS: formularz POST-uje bezpośrednio na `/api/subscribe` (form-urlencoded); endpoint rozpoznaje Content-Type i zwraca minimalną stronę HTML z potwierdzeniem lub komunikatem błędu zamiast surowego JSON-a. Akcja `mailto:` została usunięta — przeglądarki flagowały ją jako niebezpieczną.
+- Tracking konwersji (iter 19): po sukcesie submit wysyła custom event `Newsletter Signup` do Plausible z propsem `variant` (`default` lub `nie-ja`). Goal konfigurujemy w panelu Plausible → Site settings → Goals → Custom Event. Wymaga ustawionego `PUBLIC_PLAUSIBLE_DOMAIN` w env (inaczej wywołanie jest bezpiecznie pomijane).
 
 Tryb `output: hybrid` — Astro prerenderuje wszystko statycznie oprócz `src/pages/api/*`, które działa jako Node server endpoint (adapter `@astrojs/node` standalone, port 3000).
 
