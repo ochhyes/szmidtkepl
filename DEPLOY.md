@@ -77,9 +77,34 @@ sudo cp /opt/szmidtke/app/nginx.conf.example /etc/nginx/sites-available/szmidtke
 sudo ln -s /etc/nginx/sites-available/szmidtke.pl /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 
-# SSL via Certbot
-sudo certbot --nginx -d szmidtke.pl -d www.szmidtke.pl
+# SSL via Certbot — osobne certy dla www (redirect) i apex.
+sudo certbot --nginx -d szmidtke.pl
+sudo certbot --nginx -d www.szmidtke.pl
 ```
+
+---
+
+## Security headers — pierwsza weryfikacja (iteracja 20)
+
+Po deploy zmian z iteracji 20 sprawdź nagłówki i redirect.
+
+```bash
+# 6 nagłówków security (HSTS, XCTO, XFO, Referrer-Policy, Permissions-Policy, CSP)
+curl -I https://szmidtke.pl | grep -Ei "(strict-transport|x-content|x-frame|referrer-policy|permissions-policy|content-security)"
+
+# www → non-www 301
+curl -I https://www.szmidtke.pl/blog/pasywnosc-ktora-wyglada-jak-odpoczynek
+# oczekiwane: HTTP/2 301, Location: https://szmidtke.pl/blog/pasywnosc-ktora-wyglada-jak-odpoczynek
+```
+
+Zewnętrzna weryfikacja:
+
+- **Mozilla Observatory** — https://observatory.mozilla.org/analyze/szmidtke.pl — cel: **A** lub wyżej.
+- **SecurityHeaders.com** — https://securityheaders.com/?q=szmidtke.pl — cel: **A**.
+
+Jeśli CSP blokuje legalny zasób (konsola: *„Refused to load…"*), poszerz odpowiednią dyrektywę (`script-src`, `connect-src`, `img-src`, …) w bloku głównym `nginx.conf`. Po zmianie `sudo nginx -t && sudo systemctl reload nginx`.
+
+**Wymagane przed deploy iter 20:** `sudo certbot --nginx -d www.szmidtke.pl` dokleja ssl_certificate do bloku redirectu 443. Bez tego pierwszy request po `https://www.szmidtke.pl` leci na cert apex i przeglądarka pokaże błąd zanim dostanie 301.
 
 ---
 

@@ -5,9 +5,26 @@
 # po uruchomieniu tego bloku (certbot sam doda 443 + redirect 80→443).
 # =============================================================================
 
+# =============================================================================
+# www → non-www 301 (iter 20). Kanoniczna domena: szmidtke.pl (bez www).
+# Certbot -d www.szmidtke.pl doda ssl_certificate do bloku 443 poniżej.
+# =============================================================================
 server {
     listen 80;
-    server_name szmidtke.pl www.szmidtke.pl;
+    server_name www.szmidtke.pl;
+    return 301 https://szmidtke.pl$request_uri;
+}
+server {
+    listen 443 ssl http2;
+    server_name www.szmidtke.pl;
+    # ssl_certificate / ssl_certificate_key — dodaje certbot po
+    # `sudo certbot --nginx -d www.szmidtke.pl`.
+    return 301 https://szmidtke.pl$request_uri;
+}
+
+server {
+    listen 80;
+    server_name szmidtke.pl;
 
     # Rozmiar body — wystarczy skromnie, formularze tekstowe.
     client_max_body_size 1m;
@@ -27,6 +44,19 @@ server {
         application/rss+xml
         application/atom+xml
         image/svg+xml;
+
+    # Security headers — standard 2026 (Mozilla Observatory grade A).
+    # `always` — wysyłaj także na 4xx/5xx (domyślnie nginx pomija).
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+    # CSP — pierwsza wersja. Astro generuje kilka inline'owych script tagów
+    # (theme setter w BaseLayout, menu drawer, newsletter Plausible event) —
+    # dlatego `'unsafe-inline'` w script-src. TODO Sprint 4: refactor na nonce
+    # (Astro 5 wspiera `Astro.csp`).
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://analytics.szmidtke.pl; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://analytics.szmidtke.pl; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" always;
 
     # Long cache dla assetów z fingerprintem (Astro generuje nazwy z hashami).
     location ~* \.(avif|webp|jpg|jpeg|png|svg|gif|woff2|woff|ttf|eot)$ {
