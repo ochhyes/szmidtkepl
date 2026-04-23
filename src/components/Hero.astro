@@ -70,15 +70,12 @@ const { statement, sub } = Astro.props;
   }
 
   .hero-statement {
-    font-size: 40px;
+    font-size: clamp(2.25rem, 1.5rem + 3.2vw, 3.875rem);
     font-weight: 500;
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: var(--text);
     margin-bottom: 32px;
-  }
-  @media (min-width: 768px) {
-    .hero-statement { font-size: 62px; }
   }
 
   .hero-sub {
