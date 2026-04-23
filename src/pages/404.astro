@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPublishedPosts } from '../utils/posts';
+import { CATEGORY_LABEL } from '../content/config';
+
+const posts = (await getPublishedPosts()).slice(0, 3);
 ---
 
 <BaseLayout
@@ -16,13 +21,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <a href="/blog">wszystkie teksty →</a>
         </nav>
       </div>
+
+      {posts.length > 0 && (
+        <div class="not-found-feed">
+          <p class="bridge">Skoro już tu jesteś — może coś z tego.</p>
+          {posts.map((post) => (
+            <PostCard
+              href={`/blog/${post.slug}`}
+              title={post.data.title}
+              lead={post.data.lead}
+              date={post.data.date}
+              category={CATEGORY_LABEL[post.data.category] || post.data.category}
+              readingTime={post.data.readingTime}
+              tags={post.data.tags}
+              variant="list"
+            />
+          ))}
+          <a href="/blog/spis" class="archive-link">spis wszystkiego po kolei →</a>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>
 
 <style>
   .not-found {
-    padding: 96px 0;
+    padding: 80px 0 48px;
     text-align: left;
   }
   .not-found h1 {
@@ -60,6 +84,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     text-decoration: none;
   }
   .not-found-nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .not-found-feed {
+    margin-top: 48px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    padding-bottom: 48px;
+  }
+  .not-found-feed .bridge {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .not-found-feed .archive-link {
+    display: inline-block;
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .not-found-feed .archive-link:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
   }

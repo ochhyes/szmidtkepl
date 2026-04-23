@@ -24,6 +24,7 @@ const {
 } = Astro.props;
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://szmidtke.pl';
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
 // OG default z satori-generated /og-default.png (spec §11).
 // Per-wpis OG przekazywany jawnie (patrz [...slug].astro).
@@ -74,8 +75,14 @@ const structuredData = jsonLd ?? defaultJsonLd;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Favicon (placeholder — docelowy SVG w iteracji 10) -->
+    <!-- Favicon SVG (iter 16) -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Plausible analytics — self-hosted, bez cookies, bez fingerprintu.
+         Skrypt ładowany tylko gdy PUBLIC_PLAUSIBLE_DOMAIN jest ustawiony w env. -->
+    {plausibleDomain && (
+      <script is:inline defer data-domain={plausibleDomain} src="https://analytics.szmidtke.pl/js/script.js"></script>
+    )}
 
     <!-- RSS alternate (endpoint wejdzie w iteracji 6) -->
     <link rel="alternate" type="application/rss+xml" title="szmidtke.pl — RSS" href="/rss.xml" />

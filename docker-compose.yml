@@ -22,3 +22,78 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
+
+  # -------------------------------------------------------------------------
+  # Plausible — self-hosted analytics (iteracja 16)
+  # Stack: plausible (app) + postgres (users/sites) + clickhouse (events).
+  # Docs: https://github.com/plausible/community-edition
+  # Subdomena: analytics.szmidtke.pl → nginx → 127.0.0.1:8000
+  # -------------------------------------------------------------------------
+  plausible_db:
+    image: postgres:16-alpine
+    container_name: plausible_db
+    restart: unless-stopped
+    volumes:
+      - plausible_db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${PLAUSIBLE_POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=plausible_db
+    networks:
+      - plausible_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d plausible_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  plausible_events_db:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    container_name: plausible_events_db
+    restart: unless-stopped
+    volumes:
+      - plausible_events_data:/var/lib/clickhouse
+      - ./scripts/plausible/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./scripts/plausible/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - plausible_net
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1
+    container_name: plausible
+    restart: unless-stopped
+    command: sh -c "/entrypoint.sh db init-admin && /entrypoint.sh db migrate && /entrypoint.sh run"
+    depends_on:
+      plausible_db:
+        condition: service_healthy
+      plausible_events_db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - plausible_data:/var/lib/plausible
+    environment:
+      - BASE_URL=https://analytics.szmidtke.pl
+      - SECRET_KEY_BASE=${PLAUSIBLE_SECRET_KEY_BASE}
+      - TOTP_VAULT_KEY=${PLAUSIBLE_TOTP_VAULT_KEY}
+      - DATABASE_URL=postgres://postgres:${PLAUSIBLE_POSTGRES_PASSWORD:-postgres}@plausible_db:5432/plausible_db
+      - CLICKHOUSE_DATABASE_URL=http://plausible_events_db:8123/plausible_events_db
+      - DISABLE_REGISTRATION=true
+    networks:
+      - plausible_net
+
+volumes:
+  plausible_db_data:
+  plausible_events_data:
+  plausible_data:
+
+networks:
+  plausible_net:

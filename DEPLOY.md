@@ -29,7 +29,7 @@ git init --bare /opt/szmidtke.git
 
 # .env na produkcji — wpisz prawdziwy BUTTONDOWN_API_KEY
 cat > /opt/szmidtke/app/.env <<EOF
-BUTTONDOWN_API_KEY=bd_xxx_prawdziwy_klucz
+BUTTONDOWN_API_KEY=bd_xxx_prawdziwy_klucz35d40f52-b84e-4a31-a769-cfb7ce5a298d
 PUBLIC_SITE_URL=https://szmidtke.pl
 EOF
 chmod 600 /opt/szmidtke/app/.env
@@ -145,6 +145,82 @@ ssh vps 'cd /opt/szmidtke/app && docker compose restart'
 - **Certyfikat Certbot** renewuje się sam co 90 dni (cron). Warto sprawdzić `sudo certbot renew --dry-run` raz na kwartał.
 - **Docker cleanup** — stare image narastają: `docker system prune -a --volumes` raz na miesiąc.
 - **Bare repo po failed push** — jeśli hook padnie w trakcie builda, ręcznie `docker compose up -d` na VPS.
+
+---
+
+## Plausible — pierwszy setup (iteracja 16)
+
+Self-hosted analytics mieszka obok aplikacji w tym samym `docker-compose.yml`.
+Trzy serwisy (`plausible`, `plausible_db`, `plausible_events_db`) + własna sieć `plausible_net`.
+Wejście: `analytics.szmidtke.pl` → nginx → 127.0.0.1:8000.
+
+### 1. Wygeneruj sekrety
+
+Na VPS, raz:
+
+```bash
+# dokleja zmienne do .env — potem je sprawdź i edytuj
+cat >> /opt/szmidtke/app/.env <<EOF
+
+# Plausible — iteracja 16
+PUBLIC_PLAUSIBLE_DOMAIN=szmidtke.pl
+PLAUSIBLE_SECRET_KEY_BASE=$(openssl rand -base64 64 | tr -d '\n')
+PLAUSIBLE_TOTP_VAULT_KEY=$(openssl rand -base64 32 | tr -d '\n')
+PLAUSIBLE_POSTGRES_PASSWORD=$(openssl rand -hex 24)
+EOF
+chmod 600 /opt/szmidtke/app/.env
+```
+
+### 2. DNS + SSL
+
+```bash
+# DNS — rekord A analytics.szmidtke.pl → IP VPS (ten sam, co szmidtke.pl)
+# Po propagacji (~kilka minut):
+sudo cp /opt/szmidtke/app/nginx.conf.example /etc/nginx/sites-available/szmidtke.pl
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d analytics.szmidtke.pl
+```
+
+### 3. Start kontenerów
+
+```bash
+cd /opt/szmidtke/app
+docker compose up -d plausible_db plausible_events_db
+# Poczekaj ~30s aż oba healthchecki pójdą zielone:
+docker compose ps
+docker compose up -d plausible
+docker compose logs -f plausible   # zobaczysz migracje → "Plausible is ready"
+```
+
+### 4. Pierwszy użytkownik admin
+
+Po starcie `plausible` wejdź na https://analytics.szmidtke.pl — rejestracja jest wyłączona
+(`DISABLE_REGISTRATION=true`), więc trzeba utworzyć admina z linii poleceń:
+
+```bash
+docker compose exec plausible /entrypoint.sh db create-admin-user \
+  admin@szmidtke.pl '<hasło>' 'Marcin Szmidtke'
+```
+
+Zaloguj się, dodaj site `szmidtke.pl` w UI, potwierdź. Tracker na szmidtke.pl zaczyna
+liczyć wizyty od razu (skrypt jest ładowany warunkowo, gdy `PUBLIC_PLAUSIBLE_DOMAIN` jest
+ustawiony w .env — po deploy strony z tym flagą).
+
+### 5. Redeploy strony z trackerem
+
+Flaga `PUBLIC_PLAUSIBLE_DOMAIN` jest inline'owana przez Astro w czasie budowania, więc po
+pierwszym ustawieniu w `.env` trzeba wymusić rebuild:
+
+```bash
+cd /opt/szmidtke/app
+docker compose build web
+docker compose up -d web
+```
+
+### Uwaga na zasoby
+
+ClickHouse + Postgres + Elixir app razem biorą ~1-1.5 GB RAM i jeden rdzeń dość często.
+Na bardzo małym VPS (1GB RAM) może trzeszczeć przy dużych ruchach.
 
 ---
 
