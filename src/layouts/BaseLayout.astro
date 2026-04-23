@@ -80,9 +80,16 @@ const structuredData = jsonLd ?? defaultJsonLd;
     <!-- RSS alternate (endpoint wejdzie w iteracji 6) -->
     <link rel="alternate" type="application/rss+xml" title="szmidtke.pl — RSS" href="/rss.xml" />
 
-    <!-- Fonty Google: Newsreader (główny) + preconnect -->
+    <!-- Fonty Google: Newsreader (główny) + preconnect.
+         Google Fonts CSS sam serwuje subset latin-ext dla polskich znaków
+         na podstawie unicode-range w pobieranym CSS — nie trzeba jawnego parametru. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
       rel="stylesheet"

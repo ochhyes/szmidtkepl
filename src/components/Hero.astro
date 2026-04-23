@@ -1,7 +1,7 @@
 ---
 // Hero strony głównej — asymetryczny, portret wchodzi w warstwę tekstu.
 // Spec §5.2. CSS przeniesiony 1:1 z docs/szmidtke-pl-ux-final.html.
-import PortraitPlaceholder from './PortraitPlaceholder.astro';
+import SmartImage from './SmartImage.astro';
 
 interface Props {
   statement: string;
@@ -15,7 +15,14 @@ const { statement, sub } = Astro.props;
   <div class="container">
     <div class="hero-wrap">
       <div class="hero-portrait">
-        <PortraitPlaceholder ratio="4/5" label="Portret główny · 800 × 1000" />
+        <SmartImage
+          src="portret-home.jpg"
+          alt="Portret Marcina Szmidtke"
+          ratio="4/5"
+          label="Portret główny · 800 × 1000"
+          loading="eager"
+          sizes="(min-width: 900px) 380px, 320px"
+        />
       </div>
       <div class="hero-text-wrap">
         <h1 class="hero-statement">{statement}</h1>

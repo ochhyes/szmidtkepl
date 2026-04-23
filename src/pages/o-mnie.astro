@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
+import SmartImage from '../components/SmartImage.astro';
 
 // Tekst About — z prototypu HTML (odzwierciedla szmidtke-pl-copy-strona-v1.md,
 // jeśli/gdy Marcin go dostarczy — podmiana jest trywialna).
@@ -15,7 +15,13 @@ import PortraitPlaceholder from '../components/PortraitPlaceholder.astro';
     <div class="container wide">
       <div class="about-grid">
         <div class="about-portrait-wrap">
-          <PortraitPlaceholder ratio="3/4" label="Portret drugi · 1200 × 1600" />
+          <SmartImage
+            src="portret-about.jpg"
+            alt="Marcin Szmidtke — portret nieformalny"
+            ratio="3/4"
+            label="Portret drugi · 1200 × 1600"
+            sizes="(min-width: 900px) 380px, 100vw"
+          />
         </div>
         <div class="about-text">
           <h2>O mnie</h2>

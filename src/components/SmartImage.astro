@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import PortraitPlaceholder from './PortraitPlaceholder.astro';
+
+interface Props {
+  src: string; // nazwa pliku w src/assets/, np. 'portret-home.jpg'
+  alt: string;
+  ratio?: '4/5' | '3/4' | '2/3' | '16/9';
+  label?: string; // fallback label dla placeholdera
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  ratio = '4/5',
+  label,
+  widths = [400, 800, 1600],
+  sizes = '(min-width: 900px) 380px, (min-width: 768px) 320px, 280px',
+  class: className = '',
+  loading = 'lazy',
+  width,
+  height,
+} = Astro.props;
+
+// Eager glob — Astro rozpakuje do build time. Jeśli plik nie istnieje,
+// images[src] będzie undefined i spadamy na placeholder.
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+
+const key = `/src/assets/${src}`;
+const image = images[key]?.default;
+---
+
+{image ? (
+  <Image
+    src={image}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    loading={loading}
+    width={width}
+    height={height}
+    class={`smart-image ${className}`}
+    style={`aspect-ratio: ${ratio};`}
+    formats={['avif', 'webp']}
+  />
+) : (
+  <PortraitPlaceholder ratio={ratio} label={label ?? alt} className={className} />
+)}
+
+<style>
+  .smart-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.04);
+  }
+  :global(html[data-theme="dark"]) .smart-image {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.3);
+    filter: brightness(0.95);
+  }
+</style>
