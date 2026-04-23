@@ -300,12 +300,11 @@
 
 ---
 
-## Iteracja 17 — Migracja archiwum
+## ~~Iteracja 17 — Migracja archiwum~~ *(wycofane 2026-04-23)*
 
-*Identyczna z iter 9 z `docs/iteracje-claude-code.md`. Wymaga materiałów Marcina (`_archive-raw/`).*
-
-**Prompt:**
-> Iteracja 17 wg `docs/sprint-2-iteracje-claude-code.md`. Treść identyczna z iter 9 z `docs/iteracje-claude-code.md` — przenieś bez zmian.
+Marcin zdecydował, że nie będzie więcej artykułów. Blog startuje z 8 wpisami:
+5 migrowanych z `_archive-raw/` w Sprint 1 + 3 nowe. Iter 17 skasowana bez wdrożenia.
+`_archive-raw/` zostaje w repo jako ślad — nie wraca do pipeline'u.
 
 ---
 
@@ -314,6 +313,7 @@
 **Decyzje już podjęte (2026-04-23):**
 - iter 14 → wariant teaser (link na pomocja.pl, bez roztkliwiania, **bez** Pomocji w głównym nav)
 - iter 16 → Plausible self-hosted w Dockerze (zero kosztów)
+- iter 17 → **wycofana**. Nie będzie więcej artykułów z archiwum.
 - *„Wersje" wykreślone z planu* — to teraz jest *„Nie ja"*, strona już istnieje
 
 | Przed | Decyzja / wkład Marcina |
@@ -324,10 +324,9 @@
 | 14 | Akceptacja krótkiego copy teasera Pomocji (lead + 2 akapity) |
 | 15 | Nic |
 | 16 | Wygenerowanie kluczy Plausible (`openssl rand`), DNS dla `analytics.szmidtke.pl`, założenie pierwszego konta admin po starcie kontenera |
-| 17 | Pliki archiwum (`_archive-raw/`) |
 
 **Realna ścieżka P0:** 11 → 12 → 13 (sztywno sekwencyjnie).
 **Potem:** 14 i 15 mogą iść równolegle (różne pliki, brak konfliktów).
-**Na końcu:** 16 + 17 (17 czeka na materiały Marcina).
+**Na końcu:** 16.
 
-Total 6-7 sesji Claude Code.
+Total 6 sesji Claude Code.

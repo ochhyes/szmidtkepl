@@ -33,6 +33,6 @@ Thumbs.db
 .cache/
 .tmp/
 
-# archive dla migracji treści (iteracja 9)
+# raw źródła starych tekstów — poza repo; migracja zamknięta (Sprint 2 iter 17 wycofana)
 _archive-raw/
 _archive-offline/
