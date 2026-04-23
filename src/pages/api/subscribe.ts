@@ -53,39 +53,66 @@ export const POST: APIRoute = async ({ request }) => {
     return respond(isForm, { ok: false, error: 'server_misconfigured' }, 500);
   }
 
-  try {
-    const resp = await fetch('https://api.buttondown.email/v1/subscribers', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email_address: email }),
-    });
+  // Buttondown przeniosło API z .email na .com. Próbujemy najpierw .com (aktualne),
+  // potem fallback na .email (niektóre konta jeszcze tam siedzą).
+  const API_URLS = [
+    'https://api.buttondown.com/v1/subscribers',
+    'https://api.buttondown.email/v1/subscribers',
+  ];
 
-    if (resp.status === 400) {
-      const errBody = await resp.json().catch(() => ({}));
-      const code = errBody?.code ?? errBody?.detail ?? '';
-      if (/already/i.test(JSON.stringify(code))) {
-        return respond(isForm, { ok: true, already: true }, 200);
+  let lastStatus = 0;
+  let lastBody = '';
+
+  for (const url of API_URLS) {
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${apiKey}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ email_address: email }),
+      });
+
+      lastStatus = resp.status;
+      lastBody = await resp.text().catch(() => '');
+
+      if (resp.status === 400) {
+        const errBody = safeJson(lastBody);
+        const code = String(errBody?.code ?? errBody?.detail ?? lastBody);
+        if (/already/i.test(code)) {
+          return respond(isForm, { ok: true, already: true }, 200);
+        }
+        return respond(isForm, { ok: false, error: 'invalid_email' }, 400);
       }
-      return respond(isForm, { ok: false, error: 'invalid_email' }, 400);
-    }
 
-    if (resp.status === 429) {
-      return respond(isForm, { ok: false, error: 'rate_limited' }, 429);
-    }
+      if (resp.status === 429) {
+        return respond(isForm, { ok: false, error: 'rate_limited' }, 429);
+      }
 
-    if (!resp.ok) {
-      return respond(isForm, { ok: false, error: 'upstream_failure' }, 502);
-    }
+      if (resp.ok) {
+        return respond(isForm, { ok: true }, 200);
+      }
 
-    return respond(isForm, { ok: true }, 200);
-  } catch (err) {
-    console.error('[subscribe] fetch failed', err);
-    return respond(isForm, { ok: false, error: 'network' }, 502);
+      // Non-2xx — log i próbuj następnego URL-a (jeśli jest).
+      console.error(`[subscribe] Buttondown ${url} → ${resp.status}: ${lastBody.slice(0, 300)}`);
+    } catch (err) {
+      console.error(`[subscribe] network error on ${url}:`, err);
+    }
   }
+
+  console.error(`[subscribe] all Buttondown URLs failed. Last status: ${lastStatus}, body: ${lastBody.slice(0, 300)}`);
+  return respond(isForm, { ok: false, error: 'upstream_failure' }, 502);
 };
+
+function safeJson(text: string): Record<string, unknown> {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
 
 function respond(isForm: boolean, outcome: Outcome, status: number): Response {
   if (!isForm) {
