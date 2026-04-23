@@ -121,6 +121,12 @@ function respond(isForm: boolean, outcome: Outcome, status: number): Response {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+  if (outcome.ok) {
+    return new Response(null, {
+      status: 303,
+      headers: { Location: '/zapisany' },
+    });
+  }
   return htmlFallback(outcome, status);
 }
 

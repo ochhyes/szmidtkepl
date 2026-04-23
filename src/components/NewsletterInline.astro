@@ -85,11 +85,11 @@ const copy = variant === 'nie-ja'
           const data = await resp.json().catch(() => ({ ok: false }));
 
           if (data.ok) {
-            // TODO iter 13: redirect na /zapisany po sukcesie
             button.textContent = successText;
             input.value = '';
             input.disabled = true;
             if (note) note.textContent = 'Pierwszy mail z linkiem do potwierdzenia powinien przyjść w ciągu kilku minut.';
+            setTimeout(() => { window.location.href = '/zapisany'; }, 1500);
           } else {
             button.textContent = originalBtn;
             button.disabled = false;

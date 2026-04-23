@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const email = 'kontakt@szmidtke.pl';
+const mailto = (subject: string) => `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+---
+
+<BaseLayout
+  title="Kontakt — Marcin Szmidtke"
+  description="Jak napisać. Segmenty: odpowiedź na list, Fundacja Pomocja, media. Bez formularza — zwykły mail."
+>
+  <section class="block">
+    <div class="container reading">
+      <article class="prose">
+        <h1>Napisz</h1>
+        <p class="lead">
+          Czytam wszystkie listy. Odpowiadam wolno, ale odpowiadam.
+        </p>
+
+        <h2>Chcesz odpowiedzieć na list, dodać coś od siebie, sprostować</h2>
+        <p>
+          Najprostszy przypadek. Odpisz na dowolny list z newslettera — leci prosto do mnie.
+          Jeśli nie czytasz newslettera, napisz bezpośrednio.
+        </p>
+        <p>
+          → <a href={mailto('Odpowiedź na list')}>{email}</a>
+        </p>
+
+        <h2>Szukasz Fundacji Pomocja / wsparcia w roli ojca</h2>
+        <p>
+          Napisz krótko, kim jesteś i czego potrzebujesz. Skontaktuję się i przekażę dalej, jeśli potrzeba.
+          Więcej o Fundacji: <a href="/pomocja">pomocja</a>.
+        </p>
+        <p>
+          → <a href={mailto('Pomocja')}>{email}</a>
+        </p>
+
+        <h2>Jesteś dziennikarzem, podcastem, wydawcą</h2>
+        <p>
+          Materiały prasowe i bio na życzenie. Odpowiadam zwykle w ciągu kilku dni.
+        </p>
+        <p>
+          → <a href={mailto('Media')}>{email}</a>
+        </p>
+
+        <h2>Czego nie obsługuję</h2>
+        <p>
+          Nie sprzedaję szkoleń, nie prowadzę webinarów, nie robię konsultacji 1:1 (jeszcze).
+          Jeśli chcesz porozmawiać o zarządzaniu zespołem — napisz, ale uprzedzam,
+          że to rzadko wychodzi poza wymianę listów.
+        </p>
+
+        <div class="contact-foot">
+          <p>
+            <a href={`mailto:${email}`}>{email}</a>
+            <span class="sep">·</span>
+            <a href="https://www.linkedin.com/in/marcin-szmidtke" rel="me noopener" target="_blank">linkedin</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding: 80px 0 96px; }
+
+  .prose h1 {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    .prose h1 { font-size: 60px; }
+  }
+
+  .prose .lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .prose h2 {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+
+  .prose p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .prose a:hover {
+    color: var(--accent-hover);
+  }
+
+  .contact-foot {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-muted);
+  }
+  .contact-foot .sep {
+    margin: 0 12px;
+    color: var(--text-muted);
+  }
+</style>

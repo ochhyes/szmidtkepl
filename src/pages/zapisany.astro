@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedPosts } from '../utils/posts.ts';
+
+const posts = await getPublishedPosts();
+const latest = posts[0];
+const latestHref = latest ? `/blog/${latest.slug}` : '/blog';
+const latestTitle = latest?.data.title ?? 'najnowszy tekst';
+---
+
+<BaseLayout
+  title="Zapisany — Marcin Szmidtke"
+  description="Dziękuję. Za chwilę przyjdzie mail z linkiem do potwierdzenia."
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <section class="block">
+    <div class="container reading">
+      <article class="prose">
+        <h1>Zapisany.</h1>
+        <p class="lead">Dziękuję.</p>
+
+        <p>
+          Za chwilę przyjdzie mail z linkiem. Kliknij, żeby potwierdzić — bez tego list nie zacznie chodzić.
+        </p>
+        <p>
+          Jeśli nie dojdzie w ciągu pięciu minut — sprawdź spam. Czasem ląduje obok, mimo że nie powinien.
+        </p>
+        <p>
+          Pierwszy prawdziwy list dostaniesz w najbliższy czwartek. Krótszy niż teksty na stronie, bardziej z kuchni.
+        </p>
+
+        {latest && (
+          <p>
+            Tymczasem — jeśli chcesz coś przeczytać teraz, <a href={latestHref}>{latestTitle}</a>.
+          </p>
+        )}
+
+        <div class="zapisany-foot">
+          <p>
+            <a href="/">← wróć do strony</a>
+            <span class="sep">·</span>
+            <a href="mailto:kontakt@szmidtke.pl?subject=Nie%20dosz%C5%82o%20potwierdzenie">napisz, jeśli nie dojdzie</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding: 96px 0; }
+
+  .prose h1 {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+  @media (min-width: 768px) {
+    .prose h1 { font-size: 80px; }
+  }
+
+  .prose .lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 24px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .prose p {
+    font-size: 20px;
+    line-height: 1.75;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .prose a:hover {
+    color: var(--accent-hover);
+  }
+
+  .zapisany-foot {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-muted);
+  }
+  .zapisany-foot a {
+    color: var(--text-muted);
+  }
+  .zapisany-foot a:hover {
+    color: var(--accent);
+  }
+  .zapisany-foot .sep {
+    margin: 0 12px;
+  }
+</style>
