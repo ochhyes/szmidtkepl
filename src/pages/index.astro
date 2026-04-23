@@ -5,34 +5,10 @@ import PostCard from '../components/PostCard.astro';
 import NewsletterInline from '../components/NewsletterInline.astro';
 import NieJaTeaser from '../components/NieJaTeaser.astro';
 import Ornament from '../components/Ornament.astro';
+import { getPublishedPosts } from '../utils/posts';
+import { CATEGORY_LABEL } from '../content/config';
 
-// Mockowe wpisy — iteracja 2. W iteracji 3 będą czytane z content collection.
-const mockPosts = [
-  {
-    href: '/blog/pasywnosc-ktora-wyglada-jak-odpoczynek',
-    title: 'Pasywność, która wygląda jak odpoczynek',
-    lead: 'Długo myślałem, że weekend to odpoczynek. Okazało się, że weekend to chowanie się przed tygodniem. Różnica jest niewielka, ale decyduje o wszystkim.',
-    date: '2026-04-18',
-    category: 'esej',
-    readingTime: 'sześć minut',
-  },
-  {
-    href: '/blog/doradca-problem-ktory-nie-byl-jego',
-    title: 'Doradca z nie swoim problemem',
-    lead: 'Przyszedł z pytaniem o klienta. Po czterdziestu minutach okazało się, że klient był pretekstem. Potrzebował powiedzieć to komuś, żeby zobaczyć.',
-    date: '2026-04-11',
-    category: 'obserwacja',
-    readingTime: 'cztery minuty',
-  },
-  {
-    href: '/blog/nie-ja-fragment-rozdzial-czwarty',
-    title: 'Nie ja — fragment z rozdziału czwartego',
-    lead: 'Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu.',
-    date: '2026-04-04',
-    category: 'fragment',
-    readingTime: 'trzy minuty',
-  },
-];
+const latestPosts = (await getPublishedPosts()).slice(0, 3);
 ---
 
 <BaseLayout
@@ -49,14 +25,15 @@ const mockPosts = [
   <section class="block" id="blog-preview">
     <div class="container reading">
       <h2 class="section-title">Ostatnie teksty</h2>
-      {mockPosts.map((post) => (
+      {latestPosts.map((post) => (
         <PostCard
-          href={post.href}
-          title={post.title}
-          lead={post.lead}
-          date={post.date}
-          category={post.category}
-          readingTime={post.readingTime}
+          href={`/blog/${post.slug}`}
+          title={post.data.title}
+          lead={post.data.lead}
+          date={post.data.date}
+          category={CATEGORY_LABEL[post.data.category] || post.data.category}
+          readingTime={post.data.readingTime}
+          tags={post.data.tags}
           variant="home"
         />
       ))}
