@@ -1,15 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SmartImage from '../components/SmartImage.astro';
-
-// Tekst About — z prototypu HTML (odzwierciedla szmidtke-pl-copy-strona-v1.md,
-// jeśli/gdy Marcin go dostarczy — podmiana jest trywialna).
-// Marker [COPY: about] w komentarzu poniżej pomaga zlokalizować miejsce edycji.
 ---
 
 <BaseLayout
   title="O mnie — Marcin Szmidtke"
-  description="Marcin Szmidtke — piszę, prowadzę zespół, działam w Fundacji Pomocja. Kończę powieść Nie ja."
+  description="Marcin Szmidtke — piszę o pasywności, schematach, czterdziestce bez mety. Kończę powieść Nie ja."
 >
   <section class="about-preview" id="about">
     <div class="container wide">
@@ -27,36 +23,80 @@ import SmartImage from '../components/SmartImage.astro';
         </div>
         <div class="about-text">
           <h1>O mnie</h1>
-          {/* [COPY: about] — tu wchodzi tekst About (patrz szmidtke-pl-copy-strona-v1.md, jeśli istnieje) */}
+
           <p>
             Zacząłem pisać, kiedy zorientowałem się, że dużo robię, żeby nie myśleć.
-            Że skuteczność — zespół pod sobą, dowożone cele, fundacja, kolejny trening —
+          </p>
+
+          <p>
+            Że skuteczność — dowożone cele, kolejny trening, sensowny weekend z rodziną —
             jest ucieczką tak samo skuteczną jak każda inna. Nie przestałem działać.
             Zacząłem obok działania zapisywać, co po drodze zauważam.
           </p>
+
           <p>Ta strona to zbiór tych zapisów.</p>
+
+          <div class="about-sep" aria-hidden="true">· · ·</div>
+
+          <p>To nie jest poradnik — nie mam tej wiedzy.</p>
+
           <p>
-            To nie jest poradnik — nie mam tej wiedzy.
-            To nie jest blog motywacyjny — motywacji mam za dużo, problem mam raczej z tym, co pod motywacją.
-            To raczej notes pisany głośno. O pasywności, która wygląda jak odpoczynek, ale nim nie jest.
-            O schematach, w które wracasz, choć je rozpoznajesz.
-            O zarządzaniu ludźmi, kiedy samemu jesteś w środku rozjebany.
-            O ojcostwie, które zaczyna się długo po narodzinach dziecka.
+            To nie jest blog motywacyjny — motywacji mam akurat za dużo.
+            Problem mam raczej z tym, co pod motywacją.
           </p>
+
           <p>
-            Piszę dla faceta, który z zewnątrz dowozi, a w środku nosi pytania, których nie zadaje kolegom.
-            Jeśli to ty — zostań.
+            To raczej notes pisany głośno. O pasywności, która wygląda jak odpoczynek,
+            ale nim nie jest. O schematach, w które wracasz, choć je rozpoznajesz.
+            O czterdziestce, która przychodzi cicho — i w której nagle widać rzeczy,
+            na które wcześniej nie było oczu. O ojcostwie, które zaczyna się długo
+            po narodzinach dziecka. O relacjach, w które wchodzi się, zanim się je rozumie.
           </p>
+
+          <div class="about-sep" aria-hidden="true">· · ·</div>
+
           <p>
-            Poza pisaniem prowadzę zespół. Prowadzę Fundację <a href="/pomocja">Pomocja</a> — tam wspólnie robimy
-            projekt Młody Ojciec, wsparcie dla mężczyzn wchodzących w rolę, której nikt nie szkoli.
-            Kończę powieść <em><a href="/nie-ja">Nie ja</a></em>.
-            Czasem rysuję kredkami. Kiedyś biegałem długie dystanse —
-            to raczej mówi o tym, co we mnie nie było w porządku, niż o sporcie.
+            Piszę dla faceta, który z zewnątrz dowozi, a w środku nosi pytania,
+            których nie zadaje kolegom.
           </p>
+
+          <p>Jeśli to ty — zostań.</p>
+
+          <div class="about-sep" aria-hidden="true">· · ·</div>
+
+          <p>
+            Poza pisaniem: kończę powieść <em><a href="/nie-ja">Nie ja</a></em>.
+            Pracuję nad nią od czterech lat. Teraz rękopis jest w redakcji.
+          </p>
+
+          <p>
+            Działam w Fundacji <a href="/pomocja">Pomocja</a>, głównie przy projekcie <em>Młody Ojciec</em> —
+            wsparcie dla mężczyzn wchodzących w rolę, której nikt nie szkoli.
+          </p>
+
+          <p>
+            Czytam stoików. Głównie Marka Aureliusza, głównie dlatego,
+            że przypomina mi, że większość tego, co mnie rusza, nie warto ruszać.
+          </p>
+
+          <p>
+            Chodzę na terapię. Uczę się rysować kredkami.
+            Kiedyś biegałem długie dystanse — to raczej mówi o tym,
+            co we mnie nie było w porządku, niż o sporcie.
+          </p>
+
+          <p>Jestem w związku z Martą. Reszta — w tekstach.</p>
+
+          <div class="about-sep" aria-hidden="true">· · ·</div>
+
           <p>
             Jeśli chcesz czytać regularnie — <a href="/#newsletter">zapisz się do newslettera</a>.
-            Jeśli chcesz coś powiedzieć — odpisz na pierwszy list, który przyjdzie. Piszę sam.
+            Piszę list raz na dwa tygodnie.
+          </p>
+
+          <p>
+            Jeśli chcesz coś powiedzieć — odpisz na pierwszy list, który przyjdzie.
+            Odpisuję sam.
           </p>
         </div>
       </div>
@@ -98,5 +138,14 @@ import SmartImage from '../components/SmartImage.astro';
     color: var(--text);
     font-size: 19px;
     line-height: 1.75;
+  }
+  .about-text .about-sep {
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.6em;
+    margin: 32px 0 24px;
+    font-size: 18px;
+    user-select: none;
   }
 </style>
