@@ -1,6 +1,6 @@
 import { Resvg } from '@resvg/resvg-js';
 
-// OG fallback dla stron bez customowego ogImage (Home, About, Wersje, 404).
+// OG fallback dla stron bez customowego ogImage (Home, About, Nie ja, 404).
 // Rysowany ręcznie w SVG — system serif (Georgia), bez zewnętrznych fontów.
 export async function GET(): Promise<Response> {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
@@ -26,7 +26,7 @@ export async function GET(): Promise<Response> {
   });
   const png = resvg.render().asPng();
 
-  return new Response(png, {
+  return new Response(new Uint8Array(png), {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=31536000, immutable',

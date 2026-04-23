@@ -78,11 +78,11 @@
 **Cel:** Pełna strona główna 1:1 z prototypem, z 3 wpisami mockowymi.
 
 **Prompt do Claude Code:**
-> Iteracja 2 wg `iteracje-claude-code.md`. Zbuduj Home (`src/pages/index.astro`) wg sekcji 5.2 spec. Komponenty: `Hero.astro` (asymetryczny, portret placeholder 4/5 z `margin-bottom: -120px` desktop, H1 manifest, sub italic), `PostCard.astro` (meta italic → H3 link → lead → read-more), `NewsletterInline.astro` (literacki form, bez boxa — input z bottom-border + italic button; na razie bez backendu, submit robi `e.preventDefault()` i zmienia tekst buttona na *„— jest, do czwartku."*), `WersjeTeaser.astro` (grid 1fr 2fr, placeholder okładki z napisem *„Wersje"*, badge *„rękopis w redakcji"*). Wpisy: 3 sztuki w mockowej tablicy w pliku (nie w MDX jeszcze). Portret placeholder: SVG inline z ramką (4/5), kolor `--bg-alt`, bez zewnętrznego obrazu. Meta Home + OG.
+> Iteracja 2 wg `iteracje-claude-code.md`. Zbuduj Home (`src/pages/index.astro`) wg sekcji 5.2 spec. Komponenty: `Hero.astro` (asymetryczny, portret placeholder 4/5 z `margin-bottom: -120px` desktop, H1 manifest, sub italic), `PostCard.astro` (meta italic → H3 link → lead → read-more), `NewsletterInline.astro` (literacki form, bez boxa — input z bottom-border + italic button; na razie bez backendu, submit robi `e.preventDefault()` i zmienia tekst buttona na *„— jest, do czwartku."*), `NieJaTeaser.astro` (grid 1fr 2fr, placeholder okładki z napisem *„Nie ja"*, badge *„rękopis w redakcji"*). Wpisy: 3 sztuki w mockowej tablicy w pliku (nie w MDX jeszcze). Portret placeholder: SVG inline z ramką (4/5), kolor `--bg-alt`, bez zewnętrznego obrazu. Meta Home + OG.
 
 **Do zrobienia:**
-- `src/components/Hero.astro`, `src/components/PostCard.astro`, `src/components/NewsletterInline.astro` (wariant: `variant="default" | "wersje"`), `src/components/WersjeTeaser.astro`, `src/components/PortraitPlaceholder.astro` (svg z ratio prop).
-- `src/pages/index.astro` — składa Hero + Ornament + sekcja „Ostatnie teksty" (3 `PostCard`) + Ornament + NewsletterInline + Ornament + WersjeTeaser.
+- `src/components/Hero.astro`, `src/components/PostCard.astro`, `src/components/NewsletterInline.astro` (wariant: `variant="default" | "nie-ja"`), `src/components/NieJaTeaser.astro`, `src/components/PortraitPlaceholder.astro` (svg z ratio prop).
+- `src/pages/index.astro` — składa Hero + Ornament + sekcja „Ostatnie teksty" (3 `PostCard`) + Ornament + NewsletterInline + Ornament + NieJaTeaser.
 - Inline script dla formularza (toggle tekstu buttona po submit).
 - JSON-LD `Person` w `BaseLayout` (via slot lub prop) na Home.
 
@@ -125,19 +125,19 @@
 
 ---
 
-## Iteracja 4 — About + Wersje + 404 (≈300-450 linii)
+## Iteracja 4 — About + Nie ja + 404 (≈300-450 linii)
 
 **Cel:** Reszta statycznych podstron.
 
 **Prompt do Claude Code:**
-> Iteracja 4 wg `iteracje-claude-code.md`. `src/pages/o-mnie.astro` wg sekcji 5.5: container 960px, grid 2fr 3fr ≥900px, `bg-alt` jako tło sekcji, drugi portret placeholder (3/4), H2 *„O mnie"*, pełny tekst placeholderem (marker `[COPY: about]` w komentarzu HTML, żeby Marcin wiedział, gdzie wklei prawdziwy tekst z `szmidtke-pl-copy-strona-v1.md` jeśli istnieje), kontakt inline w ostatnim akapicie. `src/pages/wersje.astro` wg 5.6: teaser z `WersjeTeaser` (wariant `full`), sekcja Fragment (680px, border top+bottom, label *„fragment z rozdziału czwartego"*, 400-800 słów lorem literacki), Ornament, `NewsletterInline` wariant `wersje` z odpowiednim copy. `src/pages/404.astro` — literackie: *„Nie ma tego, czego szukasz. Jest to, co mam."* + link do `/` i `/blog`, stopka globalna. Dodaj linki w nawigacji jeśli jeszcze ich nie ma: *Piszę · O mnie · Wersje · Newsletter* (Newsletter = anchor `/#newsletter` w v1).
+> Iteracja 4 wg `iteracje-claude-code.md`. `src/pages/o-mnie.astro` wg sekcji 5.5: container 960px, grid 2fr 3fr ≥900px, `bg-alt` jako tło sekcji, drugi portret placeholder (3/4), H2 *„O mnie"*, pełny tekst placeholderem (marker `[COPY: about]` w komentarzu HTML, żeby Marcin wiedział, gdzie wklei prawdziwy tekst z `szmidtke-pl-copy-strona-v1.md` jeśli istnieje), kontakt inline w ostatnim akapicie. `src/pages/nie-ja.astro` wg 5.6: teaser z `NieJaTeaser` (wariant `full`), sekcja Fragment (680px, border top+bottom, label *„fragment z rozdziału czwartego"*, 400-800 słów lorem literacki), Ornament, `NewsletterInline` wariant `nie-ja` z odpowiednim copy. `src/pages/404.astro` — literackie: *„Nie ma tego, czego szukasz. Jest to, co mam."* + link do `/` i `/blog`, stopka globalna. Dodaj linki w nawigacji jeśli jeszcze ich nie ma: *Piszę · O mnie · Nie ja · Newsletter* (Newsletter = anchor `/#newsletter` w v1).
 
 **Do zrobienia:**
 - `src/pages/o-mnie.astro`.
-- `src/pages/wersje.astro`.
+- `src/pages/nie-ja.astro`.
 - `src/pages/404.astro`.
-- Rozszerzenie `WersjeTeaser.astro` o wariant `full` (z akapitem o procesie pisania) albo osobny `WersjeHero.astro`.
-- Rozszerzenie `NewsletterInline.astro` o wariant `wersje`.
+- Rozszerzenie `NieJaTeaser.astro` o wariant `full` (z akapitem o procesie pisania) albo osobny `NieJaHero.astro`.
+- Rozszerzenie `NewsletterInline.astro` o wariant `nie-ja`.
 - Aktualizacja `SiteHeader.astro` — anchor `/#newsletter` (na Home dodaj `id="newsletter"` na sekcji NewsletterInline z iteracji 2).
 
 **Gotowe kiedy:**
@@ -204,7 +204,7 @@
 **Cel:** Lighthouse ≥95/100/100/100, czysty audyt WCAG, obrazy w trzech formatach.
 
 **Prompt do Claude Code:**
-> Iteracja 7 wg `iteracje-claude-code.md`. Audyt + fixy: (1) Obrazy — przenieś portrety placeholdery z SVG do prawdziwego komponentu `<Image>` (`astro:assets`) przygotowanego pod AVIF/WebP/JPG z `srcset` 400/800/1600. Dodaj folder `src/assets/` z READMEm o tym, gdzie wrzucić docelowe zdjęcia (`portret-home.jpg`, `portret-about.jpg`, `okladka-wersje.jpg`); komponent ma graceful fallback na SVG placeholder jeśli plik nie istnieje. (2) Fonty — preload krytycznych wariantów Newsreadera (400, 500, italic 400), subset do Latin Extended (żeby złapać polskie znaki), `font-display: swap`. (3) Kontrast — pogłęb `--text-muted` z `#9E9890` do `#8A857E` w light (4.5:1 na `#FAF8F3`) per spec sekcja 8. (4) Focus states — sprawdź wszystkie interaktywne elementy, `:focus-visible` + outline. (5) `prefers-reduced-motion` — zweryfikuj: wszystkie `transition` wyzerowane. (6) ARIA — ornament `aria-hidden`, skip-link, hamburger `aria-expanded`, form `aria-live`. (7) Lighthouse audit (skrypt w package.json: `pnpm lhci` via `@lhci/cli` — opcjonalnie, albo opisz jak odpalić ręcznie). Zaraportuj wyniki.
+> Iteracja 7 wg `iteracje-claude-code.md`. Audyt + fixy: (1) Obrazy — przenieś portrety placeholdery z SVG do prawdziwego komponentu `<Image>` (`astro:assets`) przygotowanego pod AVIF/WebP/JPG z `srcset` 400/800/1600. Dodaj folder `src/assets/` z READMEm o tym, gdzie wrzucić docelowe zdjęcia (`portret-home.jpg`, `portret-about.jpg`, `okladka-nie-ja.png`); komponent ma graceful fallback na SVG placeholder jeśli plik nie istnieje. (2) Fonty — preload krytycznych wariantów Newsreadera (400, 500, italic 400), subset do Latin Extended (żeby złapać polskie znaki), `font-display: swap`. (3) Kontrast — pogłęb `--text-muted` z `#9E9890` do `#8A857E` w light (4.5:1 na `#FAF8F3`) per spec sekcja 8. (4) Focus states — sprawdź wszystkie interaktywne elementy, `:focus-visible` + outline. (5) `prefers-reduced-motion` — zweryfikuj: wszystkie `transition` wyzerowane. (6) ARIA — ornament `aria-hidden`, skip-link, hamburger `aria-expanded`, form `aria-live`. (7) Lighthouse audit (skrypt w package.json: `pnpm lhci` via `@lhci/cli` — opcjonalnie, albo opisz jak odpalić ręcznie). Zaraportuj wyniki.
 
 **Do zrobienia:**
 - Komponent `src/components/SmartImage.astro` korzystający z `astro:assets` + fallback.
@@ -291,7 +291,7 @@
 | 1 | Design system + layout | 0 | 1 sesja |
 | 2 | Home | 1 | 1 sesja |
 | 3 | Blog | 1 | 1 sesja długa |
-| 4 | About + Wersje + 404 | 1 | 1 sesja |
+| 4 | About + Nie ja + 404 | 1 | 1 sesja |
 | 5 | Newsletter Buttondown | 2, 4 | 1 sesja |
 | 6 | SEO | 3 | 1 sesja |
 | 7 | Perf + a11y polish | 3, 6 | 1 sesja |

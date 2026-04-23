@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import PortraitPlaceholder from './PortraitPlaceholder.astro';
 
 interface Props {
@@ -40,7 +40,7 @@ const image = images[key]?.default;
 ---
 
 {image ? (
-  <Image
+  <Picture
     src={image}
     alt={alt}
     widths={widths}

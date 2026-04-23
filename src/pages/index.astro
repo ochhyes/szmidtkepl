@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import PostCard from '../components/PostCard.astro';
 import NewsletterInline from '../components/NewsletterInline.astro';
-import WersjeTeaser from '../components/WersjeTeaser.astro';
+import NieJaTeaser from '../components/NieJaTeaser.astro';
 import Ornament from '../components/Ornament.astro';
 
 // Mockowe wpisy — iteracja 2. W iteracji 3 będą czytane z content collection.
@@ -18,15 +18,15 @@ const mockPosts = [
   },
   {
     href: '/blog/doradca-problem-ktory-nie-byl-jego',
-    title: 'Mój doradca przyniósł problem, który nie był jego',
+    title: 'Doradca z nie swoim problemem',
     lead: 'Przyszedł z pytaniem o klienta. Po czterdziestu minutach okazało się, że klient był pretekstem. Potrzebował powiedzieć to komuś, żeby zobaczyć.',
     date: '2026-04-11',
     category: 'obserwacja',
     readingTime: 'cztery minuty',
   },
   {
-    href: '/blog/wersje-fragment-rozdzial-czwarty',
-    title: 'Wersje — fragment z rozdziału czwartego',
+    href: '/blog/nie-ja-fragment-rozdzial-czwarty',
+    title: 'Nie ja — fragment z rozdziału czwartego',
     lead: 'Tomek nie wiedział, w którym momencie zaczął się zgadzać. Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu.',
     date: '2026-04-04',
     category: 'fragment',
@@ -40,8 +40,8 @@ const mockPosts = [
   description="Piszę o pasywności, schematach, drodze bez mety. Prowadzę zespół, działam w Fundacji Pomocja."
 >
   <Hero
-    statement="Nie mam gotowych odpowiedzi. Piszę, żeby po drodze zauważać więcej."
-    sub="Marcin Szmidtke — piszę, prowadzę zespół, działam w&nbsp;Fundacji Pomocja."
+    statement="Piszę, żeby zauważyć, co robię, żeby nie myśleć."
+    sub="Marcin Szmidtke. Prowadzę zespół doradców, piszę powieść, współprowadzę Fundację&nbsp;Pomocja."
   />
 
   <Ornament />
@@ -72,7 +72,7 @@ const mockPosts = [
 
   <section class="block">
     <div class="container wide">
-      <WersjeTeaser variant="home" />
+      <NieJaTeaser variant="home" />
     </div>
   </section>
 </BaseLayout>

@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import CategoryFilter from '../../components/CategoryFilter.astro';
 import Pagination from '../../components/Pagination.astro';
-import { getPublishedPosts, formatPolishDate } from '../../utils/posts';
+import { getPublishedPosts } from '../../utils/posts';
 import { CATEGORY_LABEL } from '../../content/config';
 
 const POSTS_PER_PAGE = 10;
@@ -18,12 +18,12 @@ const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 
 <BaseLayout
   title="Piszę — Marcin Szmidtke"
-  description="O pasywności, schematach, drodze bez mety. Jeden tekst w tygodniu, czasem rzadziej."
+  description="O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej."
 >
   <section class="blog-header">
     <div class="container reading">
       <h1>Piszę</h1>
-      <p class="subtitle">O pasywności, schematach, drodze bez mety. Jeden tekst w tygodniu, czasem rzadziej.</p>
+      <p class="subtitle">O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej.</p>
       <CategoryFilter active="all" />
     </div>
   </section>

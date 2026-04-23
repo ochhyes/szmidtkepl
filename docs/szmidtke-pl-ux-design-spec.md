@@ -127,7 +127,7 @@ Strona ma wyglądać jak **dobrze złożona książka**, nie jak blog firmowy. O
 
 - Strona (container): 1200px
 - Content reading (wpis, feed): 680px
-- Content szeroki (home hero wrap, about-grid, wersje-teaser): 960px
+- Content szeroki (home hero wrap, about-grid, nie-ja-teaser): 960px
 
 **Spacing scale (px):**
 `4 · 8 · 12 · 16 · 20 · 24 · 28 · 32 · 40 · 48 · 56 · 64 · 72 · 80 · 96 · 120 · 160`
@@ -149,7 +149,7 @@ Strona ma wyglądać jak **dobrze złożona książka**, nie jak blog firmowy. O
 
 - Feed wpisów: jedna kolumna (max 680px).
 - About: 2 kolumny (portret + tekst, 2:3) tylko na desktopie ≥900px.
-- Wersje: 2 kolumny (okładka + tekst, 1:2) tylko na desktopie ≥768px.
+- Nie ja: 2 kolumny (okładka + tekst, 1:2) tylko na desktopie ≥768px.
 - Stopka: 3 kolumny (2fr 1fr 1fr) na desktopie ≥768px.
 
 ---
@@ -182,7 +182,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 - Prawa strona: nawigacja inline — **Newsreader 17px serif**, nie Inter.
   - Piszę (→ /blog)
   - O mnie (→ /o-mnie)
-  - Wersje (→ /wersje)
+  - Nie ja (→ /nie-ja)
   - Newsletter (→ /newsletter — anchor lub podstrona)
 - Dark mode toggle — **w stopce**, nie w headerze.
 
@@ -235,8 +235,8 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 **Sekcja 4 — Teaser Wersji:**
 
 - Container 960px, grid 1fr 2fr na desktop ≥768px.
-- Lewa kolumna: placeholder okładki (aspect-ratio 2/3), soft shadow, bg-alt, w środku *„Wersje"* w italic serif. Brak grafiki — typografia wystarcza.
-- Prawa kolumna: H3 *„Piszę powieść. Nazywa się Wersje."*, akapit opisu (text-secondary), *„więcej o książce →"* (read-more), badge statusu: *„rękopis w redakcji"* (italic, accent color, border 1px, padding 4px 14px, inline-block).
+- Lewa kolumna: placeholder okładki (aspect-ratio 2/3), soft shadow, bg-alt, w środku *„Nie ja"* w italic serif. Brak grafiki — typografia wystarcza.
+- Prawa kolumna: H3 *„Piszę powieść. Nazywa się Nie ja."*, akapit opisu (text-secondary), *„więcej o książce →"* (read-more), badge statusu: *„rękopis w redakcji"* (italic, accent color, border 1px, padding 4px 14px, inline-block).
 
 **Sekcja 5 — Stopka** (globalna, patrz 5.7).
 
@@ -315,7 +315,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 - Background: `bg-alt` (cream) — odróżnia podstronę od Home.
 - Lewa kolumna: portret drugi, aspect-ratio 3/4, soft shadow, bg `--bg` (żeby był jaśniejszy niż otoczenie).
 - Prawa kolumna: H2 *„O mnie"* (36-48px) + pełny tekst About (z copy-v1, `szmidtke-pl-copy-strona-v1.md`).
-- Wewnątrz tekstu: `<em>Wersje</em>` italic inline (nie link w pierwszej wzmiance, link w drugiej).
+- Wewnątrz tekstu: `<em>Nie ja</em>` italic inline (nie link w pierwszej wzmiance, link w drugiej).
 - Ostatni akapit: CTA do newslettera jako inline link, nie box.
 
 **Sekcja opcjonalna — „Co robię teraz" (v1.5):**
@@ -330,12 +330,12 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 
 ---
 
-### 5.6 Wersje (`/wersje`)
+### 5.6 Nie ja (`/nie-ja`)
 
 **Sekcja 1 — Teaser książki:**
 
 - Ten sam layout co teaser na Home (grid 1fr 2fr).
-- Okładka placeholder (2/3) z napisem *„Wersje · M. Szmidtke"* w serif italic.
+- Okładka placeholder (2/3) z napisem *„Nie ja · M. Szmidtke"* w serif italic.
 - Prawa kolumna: H3 (jedno zdanie sub-headline), akapit opisu, akapit o procesie pisania, badge *„rękopis w redakcji"*.
 
 **Sekcja 2 — Fragment:**
@@ -348,7 +348,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 **Sekcja 3 — Ornament + opt-in specyficzny:**
 
 - Ornament `· · ·`.
-- Literacki newsletter jak na Home, ale z modyfikacją: *„Chcesz wiedzieć, kiedy ukaże się Wersje?"* zamiast *„List co dwa tygodnie"*. Body: *„Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy."*
+- Literacki newsletter jak na Home, ale z modyfikacją: *„Chcesz wiedzieć, kiedy ukaże się Nie ja?"* zamiast *„List co dwa tygodnie"*. Body: *„Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy."*
 
 ---
 
@@ -365,7 +365,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 **Kolumna 2 — Nawigacja:**
 
 - H4 italic *„Nawigacja"*.
-- Małe litery: *piszę · o mnie · wersje · newsletter · rss* (po jednej w linii).
+- Małe litery: *piszę · o mnie · nie ja · newsletter · rss* (po jednej w linii).
 
 **Kolumna 3 — Kontakt:**
 
@@ -393,7 +393,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 | Home hero | Portret główny | 800×1000 (4:5) | Profesjonalna sesja, autorski nastrój (nie korporacyjny). Zdjęcie, które może być „wolne" w komponowaniu — nie domykać pozy, nie uśmiech marketingowy. |
 | About | Portret drugi | 1200×1600 (3:4) | Inne ujęcie, bardziej nieformalne. Można w ruchu, przy biurku, w dresie. |
 | About inline 1 | Środowisko | 1600×900 (16:9) | Biurko, książki, notatnik — „gdzie piszę". Opcjonalnie. |
-| Wersje — okładka | Placeholder typograficzny | 800×1200 (2:3) | Na start — pusta plansza z tytułem w serifie. Po odkupnie praw do okładki — zdjęcie docelowe. |
+| Nie ja — okładka | Placeholder typograficzny | 800×1200 (2:3) | Na start — pusta plansza z tytułem w serifie. Po odkupnie praw do okładki — zdjęcie docelowe. |
 
 **Nice-to-have (później):**
 
@@ -538,7 +538,7 @@ Na ciemnym motywie noise z jaśniejszymi tonami i mniejszym alpha (0.02). Pełne
 /blog/[slug]               — Pojedynczy wpis
 /blog/kategoria/[nazwa]    — Filtr kategorii (opcjonalnie, v1.5)
 /o-mnie                    — About
-/wersje                    — Strona powieści
+/nie-ja                    — Strona powieści
 /newsletter                — Landing newslettera (anchor z Home w v1)
 /rss.xml                   — Feed RSS
 /sitemap.xml               — Sitemap
@@ -573,7 +573,7 @@ Slugi wpisów: polskie bez polskich znaków (ą → a, ż → z, ś → s, ł �
 
 - [ ] Home: hero asymetryczny + 3 wpisy + newsletter literacki + teaser Wersji + stopka
 - [ ] /o-mnie: pełny tekst z copy-v1 + 2 zdjęcia + kontakt inline
-- [ ] /wersje: teaser + fragment + opt-in specyficzny
+- [ ] /nie-ja: teaser + fragment + opt-in specyficzny
 - [ ] /blog: lista 10+ wpisów + filtr kategorii + paginacja
 - [ ] /blog/[slug]: pojedynczy wpis, drop cap, cytat blokowy, inline image, stopka wpisu
 - [ ] Newsletter: fetch do Substack/Buttondown, błędy, potwierdzenia (inline button change)

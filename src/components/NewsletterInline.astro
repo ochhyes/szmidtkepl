@@ -1,19 +1,19 @@
 ---
 // Newsletter inline literacki — bez boxa. Spec §5.2/§5.6.
-// Warianty: 'default' (Home) i 'wersje' (strona Wersje).
+// Warianty: 'default' (Home) i 'nie-ja' (strona Nie ja).
 // Submit → POST /api/subscribe → Buttondown (iteracja 5).
 // Fallback bez JS: form ma action=mailto:, method=get.
 
 interface Props {
-  variant?: 'default' | 'wersje';
+  variant?: 'default' | 'nie-ja';
   id?: string;
 }
 
 const { variant = 'default', id = 'newsletter' } = Astro.props;
 
-const copy = variant === 'wersje'
+const copy = variant === 'nie-ja'
   ? {
-      heading: 'Chcesz wiedzieć, kiedy ukaże się <em>Wersje</em>?',
+      heading: 'Chcesz wiedzieć, kiedy ukaże się <em>Nie ja</em>?',
       lead: 'Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy.',
       subtle: null,
       successText: '— dam znać.',

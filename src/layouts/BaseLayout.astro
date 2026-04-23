@@ -111,7 +111,7 @@ const structuredData = jsonLd ?? defaultJsonLd;
     </script>
 
     <!-- JSON-LD structured data -->
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <slot name="head" />
   </head>

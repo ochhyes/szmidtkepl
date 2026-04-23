@@ -1,0 +1,110 @@
+---
+// Teaser powieści Nie ja — grid 1fr 2fr (desktop), okładka + opis + status badge.
+// Spec §5.2 (Home teaser) i §5.6 (pełna strona).
+import SmartImage from './SmartImage.astro';
+
+interface Props {
+  variant?: 'home' | 'full';
+}
+
+const { variant = 'home' } = Astro.props;
+
+const heading = variant === 'home'
+  ? 'Piszę powieść. Nazywa się <em>Nie ja</em>.'
+  : '<em>Nie ja</em> to powieść o kimś, kogo nosi przez jego własne wzorce.';
+
+const ctaLink = variant === 'home' ? '/nie-ja' : null;
+---
+
+<div class="nie-ja-teaser">
+  <div class="nie-ja-cover">
+    <SmartImage
+      src="okladka-nie-ja.png"
+      alt="Nie ja — okładka powieści Marcina Szmidtke"
+      ratio="2/3"
+      label="Nie ja · M. Szmidtke"
+      sizes="(min-width: 768px) 320px, 60vw"
+    />
+  </div>
+  <div class="nie-ja-text">
+    <h3 set:html={heading} />
+    {variant === 'home' ? (
+      <p>
+        Powieść o kimś, kogo nosi przez jego własne wzorce. O czterdziestce, na której
+        niektóre rzeczy widać dopiero wtedy, kiedy już nie można ich cofnąć.
+      </p>
+    ) : (
+      <>
+        <p>
+          Książka o pasywności, która wygląda jak normalne życie. O relacjach, w które wchodzi się,
+          zanim się je rozumie. O czterdziestce, na której niektóre rzeczy widać dopiero wtedy,
+          kiedy już nie można ich cofnąć.
+        </p>
+        <p>
+          Piszę ją od czterech lat. Teraz — rękopis w redakcji. Fragmenty pojawiają się tutaj, na stronie,
+          zanim książka trafi do wydawcy.
+        </p>
+      </>
+    )}
+    {ctaLink && <a href={ctaLink} class="read-more">więcej o książce →</a>}
+    <div><span class="nie-ja-status">rękopis w redakcji</span></div>
+  </div>
+</div>
+
+<style>
+  .nie-ja-teaser {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .nie-ja-teaser {
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+    }
+  }
+
+  .nie-ja-cover {
+    width: 100%;
+  }
+
+  .nie-ja-text h3 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 768px) {
+    .nie-ja-text h3 { font-size: 34px; }
+  }
+  .nie-ja-text p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+
+  .nie-ja-text .read-more {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-style: italic;
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .nie-ja-text .read-more:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .nie-ja-status {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--accent);
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    margin-top: 8px;
+  }
+</style>

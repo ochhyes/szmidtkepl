@@ -1,6 +1,6 @@
 # szmidtke.pl
 
-Strona osobista Marcina Szmidtke — blog autorski, strona powieści *Wersje*, literacki newsletter.
+Strona osobista Marcina Szmidtke — blog autorski, strona powieści *Nie ja*, literacki newsletter.
 
 **Stack:** Astro 5 + MDX + czysty CSS (custom properties). TypeScript strict. Hosting: kontener Docker + nginx na VPS.
 
@@ -39,7 +39,7 @@ Strona: http://localhost:4321
 src/
   layouts/       Layouty (BaseLayout z <head>, headerem, stopką)
   components/    Komponenty Astro (Hero, PostCard, NewsletterInline, …)
-  pages/         Routes: index, blog/, o-mnie, wersje, 404
+  pages/         Routes: index, blog/, o-mnie, nie-ja, 404
   content/
     blog/        Wpisy MDX z frontmatter
     config.ts    Schemat content collection (Zod)
@@ -62,10 +62,10 @@ Folder `docs/` zawiera:
 1. Załóż konto na https://buttondown.email (darmowy plan wystarcza na start).
 2. Weź klucz z https://buttondown.email/settings/programming.
 3. Wklej do `.env` jako `BUTTONDOWN_API_KEY=...`.
-4. Uruchom `npm run dev` — formularz na Home i stronie Wersje wysyła do `/api/subscribe`, który przekazuje do Buttondown.
+4. Uruchom `npm run dev` — formularz na Home i stronie Nie ja wysyła do `/api/subscribe`, który przekazuje do Buttondown.
 
 Zachowanie:
-- Sukces → button zmienia tekst na *„— jest, do czwartku."* (wariant Home) lub *„— dam znać."* (Wersje).
+- Sukces → button zmienia tekst na *„— jest, do czwartku."* (wariant Home) lub *„— dam znać."* (Nie ja).
 - Duplikat → również sukces (Buttondown zwraca 400 z `already_subscribed`; obsługujemy jako „już jesteś").
 - Błąd walidacji → mikrocopy pod formularzem zmienia się na komunikat błędu.
 - Honeypot (hidden input `website`) chroni przed botami bez palenia klucza API.

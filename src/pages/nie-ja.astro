@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import WersjeTeaser from '../components/WersjeTeaser.astro';
+import NieJaTeaser from '../components/NieJaTeaser.astro';
 import NewsletterInline from '../components/NewsletterInline.astro';
 import Ornament from '../components/Ornament.astro';
 
@@ -9,14 +9,14 @@ import Ornament from '../components/Ornament.astro';
 ---
 
 <BaseLayout
-  title="Wersje — powieść Marcina Szmidtke"
+  title="Nie ja — powieść Marcina Szmidtke"
   description="Powieść o kimś, kogo nosi przez jego własne wzorce — i o tym, jak powoli uczy się to zauważyć. Rękopis w redakcji."
 >
   <section class="block">
     <div class="container wide">
-      <WersjeTeaser variant="full" />
+      <NieJaTeaser variant="full" />
 
-      <div class="wersje-fragment">
+      <div class="nie-ja-fragment">
         <div class="fragment-label">fragment z rozdziału czwartego</div>
         <p>
           Tomek nie wiedział, w którym momencie zaczął się zgadzać.
@@ -44,11 +44,11 @@ import Ornament from '../components/Ornament.astro';
 
   <Ornament />
 
-  <NewsletterInline variant="wersje" id="newsletter-wersje" />
+  <NewsletterInline variant="nie-ja" id="newsletter-nie-ja" />
 </BaseLayout>
 
 <style>
-  .wersje-fragment {
+  .nie-ja-fragment {
     max-width: var(--reading-w);
     margin: 64px auto 0;
     padding: 40px 0;
@@ -57,12 +57,12 @@ import Ornament from '../components/Ornament.astro';
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
-  .wersje-fragment p {
+  .nie-ja-fragment p {
     margin-bottom: 20px;
     font-size: 19px;
     line-height: 1.7;
   }
-  .wersje-fragment .fragment-label {
+  .nie-ja-fragment .fragment-label {
     font-family: var(--font-serif);
     font-style: italic;
     font-size: 14px;
