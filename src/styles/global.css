@@ -13,7 +13,7 @@
   --bg-alt: #F1ECE1;        /* cream wyróżnienia */
   --text: #1F1B18;          /* near-black, ciepłe */
   --text-secondary: #6B6560;
-  --text-muted: #8A857E;    /* pogłębione z #9E9890 dla kontrastu 4.5:1 (spec §8) */
+  --text-muted: #706A62;    /* pogłębione dla WCAG AA — ~4.8:1 na #FAF8F3 */
   --accent: #6B2E2E;        /* burgundy — akcent tekstowy */
   --accent-hover: #4A1E1E;
   --border: #E5DFD2;
@@ -36,7 +36,7 @@ html[data-theme="dark"] {
   --bg-alt: #231F1B;
   --text: #EAE4DA;
   --text-secondary: #A09A90;
-  --text-muted: #8E887F;    /* pogłębione dla kontrastu w dark */
+  --text-muted: #9A948A;    /* pogłębione dla WCAG AA na ciemnym tle */
   --accent: #C88A7A;
   --accent-hover: #DDA598;
   --border: #332E28;
@@ -48,7 +48,7 @@ html[data-theme="dark"] {
     --bg-alt: #231F1B;
     --text: #EAE4DA;
     --text-secondary: #A09A90;
-    --text-muted: #8E887F;
+    --text-muted: #9A948A;
     --accent: #C88A7A;
     --accent-hover: #DDA598;
     --border: #332E28;
