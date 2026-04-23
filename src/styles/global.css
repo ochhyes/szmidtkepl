@@ -202,7 +202,7 @@ em, i { font-style: italic; }
 header.site { padding: 28px 0; }
 header.site .inner {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 32px;
 }
