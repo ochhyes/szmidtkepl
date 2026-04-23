@@ -1,0 +1,26 @@
+.git
+.gitignore
+node_modules
+dist
+.astro
+.env
+.env.local
+.env.*.local
+
+# Docs trzymane w repo dla kontekstu, ale nie potrzebne w runtime.
+docs
+
+# Logs / caches / editors
+*.log
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Archiwum migracji (iteracja 9)
+_archive-raw
+_archive-offline
+
+# Build artefakty lokalne
+*.swp
+*.swo
