@@ -23,7 +23,10 @@ const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   <section class="blog-header">
     <div class="container reading">
       <h1>Piszę</h1>
-      <p class="subtitle">O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej.</p>
+      <p class="subtitle">
+        O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej.
+        <a href="/blog/spis" class="archive-link">wszystkie teksty po kolei →</a>
+      </p>
       <CategoryFilter active="all" />
     </div>
   </section>
@@ -41,6 +44,7 @@ const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
             date={post.data.date}
             category={CATEGORY_LABEL[post.data.category] || post.data.category}
             readingTime={post.data.readingTime}
+            tags={post.data.tags}
             variant="list"
           />
         ))
@@ -75,7 +79,25 @@ const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
     font-style: italic;
     font-size: 19px;
     color: var(--text-secondary);
-    max-width: 560px;
+    max-width: 620px;
+  }
+  .blog-header .subtitle .archive-link {
+    display: inline-block;
+    margin-left: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .blog-header .subtitle .archive-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  @media (max-width: 640px) {
+    .blog-header .subtitle .archive-link {
+      display: block;
+      margin-left: 0;
+      margin-top: 8px;
+    }
   }
   .empty {
     color: var(--text-secondary);

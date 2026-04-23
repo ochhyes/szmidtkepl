@@ -2,43 +2,51 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PostCard from '../../../components/PostCard.astro';
-import CategoryFilter from '../../../components/CategoryFilter.astro';
 import { getPublishedPosts } from '../../../utils/posts';
-import { CATEGORY_ORDER, CATEGORY_LABEL } from '../../../content/config';
+import { CATEGORY_LABEL } from '../../../content/config';
+import { slugify } from '../../../utils/slug';
 
 export const getStaticPaths = (async () => {
   const posts = await getPublishedPosts();
-  return CATEGORY_ORDER.map((category) => ({
-    params: { nazwa: category },
-    props: {
-      category,
-      posts: posts.filter((p) => p.data.category === category),
-    },
+  const tagMap = new Map<string, { label: string; posts: typeof posts }>();
+
+  for (const post of posts) {
+    const tags = post.data.tags ?? [];
+    for (const tag of tags) {
+      const slug = slugify(tag);
+      if (!tagMap.has(slug)) {
+        tagMap.set(slug, { label: tag, posts: [] });
+      }
+      tagMap.get(slug)!.posts.push(post);
+    }
+  }
+
+  return Array.from(tagMap.entries()).map(([slug, entry]) => ({
+    params: { tag: slug },
+    props: { tagLabel: entry.label, posts: entry.posts },
   }));
 }) satisfies GetStaticPaths;
 
-const { category, posts } = Astro.props;
-const label = CATEGORY_LABEL[category] || category;
+const { tagLabel, posts } = Astro.props;
 ---
 
 <BaseLayout
-  title={`${label.charAt(0).toUpperCase() + label.slice(1)} — Marcin Szmidtke`}
-  description={`Wpisy z kategorii „${label}" — Marcin Szmidtke.`}
+  title={`Tag: ${tagLabel} — Marcin Szmidtke`}
+  description={`Wpisy oznaczone tagiem „${tagLabel}" — Marcin Szmidtke.`}
 >
   <section class="blog-header">
     <div class="container reading">
       <h1>Piszę</h1>
       <p class="subtitle">
-        Kategoria: <em>{label}</em>
+        Tag: <em>{tagLabel}</em>
       </p>
-      <CategoryFilter active={category} />
     </div>
   </section>
 
   <section class="block">
     <div class="container reading">
       {posts.length === 0 ? (
-        <p class="empty">Nic w tej kategorii. Jeszcze.</p>
+        <p class="empty">Nic pod tym tagiem. Jeszcze.</p>
       ) : (
         posts.map((post) => (
           <PostCard
@@ -46,7 +54,7 @@ const label = CATEGORY_LABEL[category] || category;
             title={post.data.title}
             lead={post.data.lead}
             date={post.data.date}
-            category={label}
+            category={CATEGORY_LABEL[post.data.category] || post.data.category}
             readingTime={post.data.readingTime}
             tags={post.data.tags}
             variant="list"

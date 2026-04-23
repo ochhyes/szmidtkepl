@@ -22,6 +22,19 @@ export async function getRelatedPosts(current: BlogPost, limit = 2): Promise<Blo
   return sameCat.filter((p) => p.id !== current.id).slice(0, limit);
 }
 
+// Sąsiadujące wpisy w porządku chronologicznym (`allPosts` posortowane desc → index-1 = nowsze, index+1 = starsze).
+export function getAdjacentPosts(
+  currentSlug: string,
+  allPosts: BlogPost[],
+): { prev: BlogPost | null; next: BlogPost | null } {
+  const idx = allPosts.findIndex((p) => p.slug === currentSlug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    next: idx > 0 ? allPosts[idx - 1] : null,
+    prev: idx < allPosts.length - 1 ? allPosts[idx + 1] : null,
+  };
+}
+
 export function formatPolishDate(date: Date): string {
   return date.toLocaleDateString('pl-PL', {
     day: 'numeric',

@@ -3,7 +3,8 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostBody from '../../components/PostBody.astro';
 import PostFooter from '../../components/PostFooter.astro';
-import { getPublishedPosts, getRelatedPosts, formatPolishDate } from '../../utils/posts';
+import PostTags from '../../components/PostTags.astro';
+import { getPublishedPosts, getRelatedPosts, getAdjacentPosts, formatPolishDate } from '../../utils/posts';
 import { CATEGORY_LABEL } from '../../content/config';
 
 export const getStaticPaths = (async () => {
@@ -17,6 +18,8 @@ export const getStaticPaths = (async () => {
 const { post } = Astro.props;
 const { Content } = await post.render();
 const related = await getRelatedPosts(post, 2);
+const allPosts = await getPublishedPosts();
+const { prev, next } = getAdjacentPosts(post.slug, allPosts);
 
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://szmidtke.pl';
 const canonical = new URL(`/blog/${post.slug}`, siteUrl).toString();
@@ -54,13 +57,14 @@ const meta = `${formatPolishDate(post.data.date)} — ${categoryLabel}, ${post.d
     <div class="container">
       <article class="post-single">
         <div class="meta">{meta}</div>
+        {post.data.tags && post.data.tags.length > 0 && <PostTags tags={post.data.tags} />}
         <h1>{post.data.title}</h1>
         <p class="lead-para">{post.data.lead}</p>
         <PostBody>
           <Content />
         </PostBody>
       </article>
-      <PostFooter related={related} />
+      <PostFooter related={related} prev={prev} next={next} url={canonical} />
     </div>
   </section>
 </BaseLayout>
@@ -71,7 +75,8 @@ const meta = `${formatPolishDate(post.data.date)} — ${categoryLabel}, ${post.d
     max-width: var(--reading-w);
     margin: 0 auto;
   }
-  .post-single .meta { margin-bottom: 20px; }
+  .post-single .meta { margin-bottom: 12px; }
+  .post-single :global(.post-tags) { margin-bottom: 20px; }
   .post-single h1 {
     font-size: 40px;
     font-weight: 500;

@@ -1,6 +1,7 @@
 ---
 // Karta wpisu w feedzie — meta italic → H3 link → lead → read-more.
 // Używane na Home (§5.2) i na /blog (§5.3). variant steruje tekstem read-more.
+import PostTags from './PostTags.astro';
 
 interface Props {
   href: string;
@@ -9,6 +10,7 @@ interface Props {
   date: Date | string;
   category: string;
   readingTime: string;
+  tags?: string[];
   variant?: 'home' | 'list';
 }
 
@@ -19,6 +21,7 @@ const {
   date,
   category,
   readingTime,
+  tags,
   variant = 'home',
 } = Astro.props;
 
@@ -42,6 +45,7 @@ const readMore = variant === 'home'
   <div class="post-meta meta">{meta}</div>
   <h3><a href={href}>{title}</a></h3>
   <p class="lead">{lead}</p>
+  {tags && tags.length > 0 && <PostTags tags={tags} />}
   <a href={href} class="read-more">{readMore}</a>
 </article>
 
@@ -78,8 +82,11 @@ const readMore = variant === 'home'
     color: var(--text-secondary);
     font-size: 18px;
     line-height: 1.6;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     max-width: 620px;
+  }
+  .post-preview :global(.post-tags) {
+    margin-bottom: 18px;
   }
 
   .read-more {

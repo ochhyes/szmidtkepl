@@ -3,14 +3,21 @@ import type { BlogPost } from '../utils/posts';
 
 interface Props {
   related: BlogPost[];
+  prev?: BlogPost | null;
+  next?: BlogPost | null;
+  url?: string;
 }
-const { related } = Astro.props;
+const { related, prev = null, next = null, url } = Astro.props;
+const linkedInShare = url
+  ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
+  : null;
 ---
 
 <aside class="post-footer">
   <p class="inline-optin">
     Jeśli chcesz dostawać nowe teksty e-mailem — <a href="/#newsletter">list co dwa tygodnie</a>. Bez automatów.
   </p>
+
   {related.length > 0 && (
     <div class="related">
       <h4>zobacz też</h4>
@@ -19,7 +26,60 @@ const { related } = Astro.props;
       ))}
     </div>
   )}
+
+  {(prev || next) && (
+    <nav class="prev-next" aria-label="Nawigacja między wpisami">
+      <div class="pn-slot pn-prev">
+        {prev && (
+          <a href={`/blog/${prev.slug}`}>
+            <span class="pn-label">← poprzedni</span>
+            <span class="pn-title">{prev.data.title}</span>
+          </a>
+        )}
+      </div>
+      <div class="pn-slot pn-next">
+        {next && (
+          <a href={`/blog/${next.slug}`}>
+            <span class="pn-label">następny →</span>
+            <span class="pn-title">{next.data.title}</span>
+          </a>
+        )}
+      </div>
+    </nav>
+  )}
+
+  <div class="share">
+    <h4>udostępnij</h4>
+    <div class="share-actions">
+      <button type="button" data-share-copy>kopiuj link</button>
+      {linkedInShare && (
+        <a href={linkedInShare} target="_blank" rel="noopener">linkedin →</a>
+      )}
+    </div>
+  </div>
 </aside>
+
+<script is:inline>
+  (() => {
+    const btn = document.querySelector('[data-share-copy]');
+    if (!btn) return;
+    const original = btn.textContent;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        btn.textContent = 'skopiowano';
+        btn.classList.add('ok');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('ok');
+        }, 2000);
+      } catch (e) {
+        btn.textContent = 'nie udało się';
+        setTimeout(() => { btn.textContent = original; }, 2000);
+      }
+    });
+  })();
+</script>
 
 <style>
   .post-footer {
@@ -35,7 +95,8 @@ const { related } = Astro.props;
     margin-bottom: 32px;
     font-size: 18px;
   }
-  .post-footer .related h4 {
+  .post-footer .related h4,
+  .post-footer .share h4 {
     font-family: var(--font-serif);
     font-style: italic;
     font-size: 16px;
@@ -53,4 +114,83 @@ const { related } = Astro.props;
     border-bottom: 1px solid var(--border);
   }
   .post-footer .related a:hover { color: var(--accent); }
+
+  .prev-next {
+    display: grid;
+    gap: 20px;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  @media (min-width: 700px) {
+    .prev-next {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+  }
+  .pn-slot { min-height: 1px; }
+  .pn-next { text-align: left; }
+  @media (min-width: 700px) {
+    .pn-next { text-align: right; }
+  }
+  .prev-next a {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .prev-next a:hover { color: var(--accent); }
+  .pn-label {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .pn-title {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .share {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .share-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    align-items: baseline;
+  }
+  .share-actions button,
+  .share-actions a {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--accent);
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .share-actions button:hover,
+  .share-actions a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .share-actions button.ok {
+    color: var(--success);
+    text-decoration: none;
+    cursor: default;
+  }
+  .share-actions button:focus-visible,
+  .share-actions a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 </style>

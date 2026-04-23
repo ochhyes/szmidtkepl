@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedPosts, formatPolishDate } from '../../utils/posts';
+
+const posts = await getPublishedPosts();
+
+// Grupowanie po roku — post.data.date to Date, posts są posortowane desc.
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+const years = Array.from(byYear.keys()).sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Spis — Marcin Szmidtke"
+  description="Wszystkie teksty po kolei. Od najnowszego."
+>
+  <section class="block">
+    <div class="container reading">
+      <h1>Spis</h1>
+      <p class="lead">Wszystko po kolei. Od najnowszego.</p>
+
+      {posts.length === 0 ? (
+        <p class="empty">Nie ma jeszcze żadnych tekstów.</p>
+      ) : (
+        <dl class="archive">
+          {years.map((year) => (
+            <Fragment>
+              <dt>{year}</dt>
+              <dd>
+                <ul>
+                  {byYear.get(year)!.map((post) => (
+                    <li>
+                      <time datetime={post.data.date.toISOString()}>
+                        {formatPolishDate(post.data.date)}
+                      </time>
+                      <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </Fragment>
+          ))}
+        </dl>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding: 80px 0 96px; }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 768px) {
+    h1 { font-size: 64px; }
+  }
+
+  .lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 56px;
+  }
+
+  .archive {
+    margin: 0;
+  }
+  .archive dt {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-muted);
+    margin-top: 40px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .archive dt:first-child { margin-top: 0; }
+  .archive dd {
+    margin: 0;
+  }
+  .archive ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .archive li {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 600px) {
+    .archive li {
+      grid-template-columns: 180px 1fr;
+      gap: 24px;
+      align-items: baseline;
+    }
+  }
+  .archive li:last-child { border-bottom: none; }
+  .archive time {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+  .archive li a {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .archive li a:hover {
+    color: var(--accent);
+  }
+
+  .empty {
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 48px 0;
+  }
+</style>

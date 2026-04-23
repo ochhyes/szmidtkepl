@@ -1,0 +1,47 @@
+---
+import { slugify } from '../utils/slug';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{tags && tags.length > 0 && (
+  <ul class="post-tags">
+    {tags.map((tag) => (
+      <li>
+        <a href={`/blog/tag/${slugify(tag)}`}>{tag}</a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .post-tags {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .post-tags li { margin: 0; }
+  .post-tags a {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .post-tags a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+</style>
