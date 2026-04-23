@@ -27,17 +27,29 @@ const ogImage = post.data.ogImage ?? new URL(`/og/${post.slug}.png`, siteUrl).to
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: post.data.title,
-  description: post.data.lead,
-  datePublished: post.data.date.toISOString(),
-  author: {
-    '@type': 'Person',
-    name: 'Marcin Szmidtke',
-    url: siteUrl,
-  },
-  image: ogImage,
-  mainEntityOfPage: canonical,
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      description: post.data.lead,
+      datePublished: post.data.date.toISOString(),
+      author: {
+        '@type': 'Person',
+        name: 'Marcin Szmidtke',
+        url: siteUrl,
+      },
+      image: ogImage,
+      mainEntityOfPage: canonical,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Marcin Szmidtke', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Piszę', item: new URL('/blog', siteUrl).toString() },
+        { '@type': 'ListItem', position: 3, name: post.data.title, item: canonical },
+      ],
+    },
+  ],
 };
 
 const categoryLabel = CATEGORY_LABEL[post.data.category] || post.data.category;

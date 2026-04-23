@@ -12,7 +12,10 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/api/'),
+      filter: (page) =>
+        !page.includes('/api/') &&
+        !page.endsWith('/zapisany') &&
+        !page.endsWith('/zapisany/'),
     }),
   ],
   markdown: {
