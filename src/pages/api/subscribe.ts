@@ -41,7 +41,10 @@ export const POST: APIRoute = async ({ request }) => {
     return respond(isForm, { ok: false, error: 'invalid_email' }, 400);
   }
 
-  const apiKey = import.meta.env.BUTTONDOWN_API_KEY;
+  // UWAGA: process.env (nie import.meta.env) — sekrety serwerowe w Astro output:hybrid
+  // są inline'owane przez Vite w build time; .env jest w .dockerignore, więc w build stage
+  // wartość byłaby undefined i zapiekłaby się w kod. process.env czyta runtime z kontenera.
+  const apiKey = process.env.BUTTONDOWN_API_KEY ?? import.meta.env.BUTTONDOWN_API_KEY;
   if (!apiKey) {
     if (import.meta.env.DEV) {
       console.warn('[subscribe] BUTTONDOWN_API_KEY missing — skipping real call.', { email });
