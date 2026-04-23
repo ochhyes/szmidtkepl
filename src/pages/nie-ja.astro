@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NieJaTeaser from '../components/NieJaTeaser.astro';
+import NieJaStatus from '../components/NieJaStatus.astro';
 import NewsletterInline from '../components/NewsletterInline.astro';
 import Ornament from '../components/Ornament.astro';
 
@@ -15,6 +16,10 @@ import Ornament from '../components/Ornament.astro';
   <section class="block">
     <div class="container wide">
       <NieJaTeaser variant="full" />
+
+      <Ornament />
+
+      <NieJaStatus current="redakcja" />
 
       <div class="nie-ja-fragment">
         <div class="fragment-label">fragment z rozdziału czwartego</div>

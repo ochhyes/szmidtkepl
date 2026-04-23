@@ -61,22 +61,22 @@ const linkedInShare = url
 
 <script is:inline>
   (() => {
-    const btn = document.querySelector('[data-share-copy]');
-    if (!btn) return;
-    const original = btn.textContent;
-    btn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        btn.textContent = 'skopiowano';
-        btn.classList.add('ok');
-        setTimeout(() => {
-          btn.textContent = original;
-          btn.classList.remove('ok');
-        }, 2000);
-      } catch (e) {
-        btn.textContent = 'nie udało się';
-        setTimeout(() => { btn.textContent = original; }, 2000);
-      }
+    document.querySelectorAll('[data-share-copy]').forEach((btn) => {
+      const original = btn.textContent;
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          btn.textContent = 'skopiowano';
+          btn.classList.add('ok');
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.classList.remove('ok');
+          }, 2000);
+        } catch (e) {
+          btn.textContent = 'nie udało się';
+          setTimeout(() => { btn.textContent = original; }, 2000);
+        }
+      });
     });
   })();
 </script>
