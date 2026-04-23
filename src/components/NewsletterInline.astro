@@ -35,8 +35,8 @@ const copy = variant === 'nie-ja'
 
       <form
         class="newsletter-inline-form"
-        action="mailto:kontakt@szmidtke.pl?subject=Newsletter"
-        method="get"
+        action="/api/subscribe"
+        method="post"
         data-newsletter-form
         data-success-text={copy.successText}
       >

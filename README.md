@@ -69,7 +69,7 @@ Zachowanie:
 - Duplikat → również sukces (Buttondown zwraca 400 z `already_subscribed`; obsługujemy jako „już jesteś").
 - Błąd walidacji → mikrocopy pod formularzem zmienia się na komunikat błędu.
 - Honeypot (hidden input `website`) chroni przed botami bez palenia klucza API.
-- Fallback bez JS: formularz ma `action="mailto:kontakt@szmidtke.pl?subject=Newsletter"` — klient maila otwiera się przy submit.
+- Fallback bez JS: formularz POST-uje bezpośrednio na `/api/subscribe` (form-urlencoded); endpoint rozpoznaje Content-Type i zwraca minimalną stronę HTML z potwierdzeniem lub komunikatem błędu zamiast surowego JSON-a. Akcja `mailto:` została usunięta — przeglądarki flagowały ją jako niebezpieczną.
 
 Tryb `output: hybrid` — Astro prerenderuje wszystko statycznie oprócz `src/pages/api/*`, które działa jako Node server endpoint (adapter `@astrojs/node` standalone, port 3000).
 
