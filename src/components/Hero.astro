@@ -47,10 +47,13 @@ const { statement, sub } = Astro.props;
     margin-left: 0;
   }
   @media (min-width: 900px) {
+    .hero-wrap { min-height: 500px; }
     .hero-portrait {
-      margin-left: 40px;
-      margin-bottom: -120px;
+      position: absolute;
+      top: 0;
+      left: 40px;
       width: 380px;
+      margin: 0;
     }
   }
 
@@ -60,8 +63,9 @@ const { statement, sub } = Astro.props;
   }
   @media (min-width: 900px) {
     .hero-text-wrap {
-      padding-top: 0;
+      padding-top: 60px;
       padding-left: 440px;
+      min-height: 440px;
     }
   }
 
