@@ -70,7 +70,11 @@ services:
     image: ghcr.io/plausible/community-edition:v2.1
     container_name: plausible
     restart: unless-stopped
-    command: sh -c "/entrypoint.sh db init-admin && /entrypoint.sh db migrate && /entrypoint.sh run"
+    # NIE `db init-admin` — w Plausible CE v2.x wymaga zmiennych ADMIN_USER_*,
+    # których tu nie ustawiamy, więc kontener crashuje przy pierwszym starcie.
+    # Admin tworzony osobno: `docker compose exec plausible /entrypoint.sh db
+    # create-admin-user ...` (DEPLOY.md krok 4, sekcja "Pierwszy użytkownik admin").
+    command: sh -c "/entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       plausible_db:
         condition: service_healthy

@@ -249,6 +249,54 @@ Na bardzo małym VPS (1GB RAM) może trzeszczeć przy dużych ruchach.
 
 ---
 
+## Backup Plausible (iteracja 22)
+
+Daily backup: Postgres (`pg_dump`) + ClickHouse (`events` + `sessions` jako gzipped TSV). Retention 14 dni, lokalnie w `/opt/backups/plausible/`. Skrypt: `scripts/backup-plausible.sh` (w repo).
+
+### Setup cron
+
+```bash
+# Na VPS:
+crontab -e
+# Dopisz linię:
+0 4 * * * /opt/szmidtke/app/scripts/backup-plausible.sh >> /var/log/plausible-backup.log 2>&1
+
+# Pierwsze ręczne uruchomienie żeby sprawdzić czy działa:
+bash /opt/szmidtke/app/scripts/backup-plausible.sh
+ls -la /opt/backups/plausible/
+# oczekiwane: pg-YYYY-MM-DD.sql.gz + ch-events-YYYY-MM-DD.tsv.gz + ch-sessions-YYYY-MM-DD.tsv.gz
+```
+
+### Restore
+
+Postgres:
+
+```bash
+gunzip < /opt/backups/plausible/pg-2026-04-23.sql.gz \
+  | docker compose -f /opt/szmidtke/app/docker-compose.yml exec -T plausible_db psql -U postgres plausible_db
+```
+
+ClickHouse (events; sessions analogicznie):
+
+```bash
+gunzip < /opt/backups/plausible/ch-events-2026-04-23.tsv.gz \
+  | docker compose -f /opt/szmidtke/app/docker-compose.yml exec -T plausible_events_db \
+    clickhouse-client --query "INSERT INTO plausible_events_db.events FORMAT TabSeparatedWithNames"
+```
+
+### Test odzyskania (rekomendowany raz po setupie)
+
+1. Zrób ręczny backup (`bash scripts/backup-plausible.sh`).
+2. Postaw drugi VPS testowy (lub docker compose stack lokalnie) z czystym Plausible.
+3. Restore wg komend wyżej.
+4. Zaloguj się do panelu testowego — sprawdź, czy site `szmidtke.pl` jest widoczny z historią wizyt.
+
+### Off-site backup
+
+**Out of scope Sprint 3 — rekomendacja:** dodać `rclone` do S3 / Backblaze B2 raz na dobę po lokalnym backupie. Pojedyncza awaria dysku VPS = utrata statystyk. Do rozważenia w Sprint 4.
+
+---
+
 ## Alternatywa: GitHub Actions (później)
 
 Po ustabilizowaniu workflow można dorzucić `.github/workflows/deploy.yml`, który:
