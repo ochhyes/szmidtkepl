@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Pomocja — Marcin Szmidtke"
+  description="Fundacja, którą prowadzę. Wsparcie dla mężczyzn w roli, której nikt nie szkoli. Teaser z linkiem do pomocja.pl."
+>
+  <section class="block">
+    <div class="container reading">
+      <article class="prose">
+        <h1>Pomocja</h1>
+        <p class="lead">
+          Fundacja, którą prowadzimy. Wsparcie dla mężczyzn w roli, której nikt nie szkoli.
+          {/* [COPY: pomocja-lead] — do doprecyzowania przez Marcina */}
+        </p>
+
+        <p>
+          {/* [COPY: pomocja-akapit-1] — do uzupełnienia przez Marcina. 2-3 zdania o tym, czym jest Fundacja i dlaczego powstała. */}
+          Pomocja robi projekt <em>Młody Ojciec</em> — grupy wsparcia i rozmowy z mężczyznami,
+          którzy właśnie zostali ojcami albo próbują wrócić do roli, której nikt ich nie uczył.
+          Powstała, bo między poradnikiem a terapeutą jest ogromna luka — i w tej luce siedzi większość z nas.
+        </p>
+
+        <p>
+          Cała robota dzieje się na <a href="https://pomocja.pl" rel="noopener" target="_blank">pomocja.pl</a>.
+          Tam są terminy spotkań, formularze zgłoszeniowe, opisy projektów.
+          Tu zostawiam tylko ślad.
+        </p>
+
+        <p class="cta">
+          <a href="https://pomocja.pl" rel="noopener" target="_blank">→ pomocja.pl</a>
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding: 80px 0 96px; }
+
+  .prose h1 {
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    .prose h1 { font-size: 60px; }
+  }
+
+  .prose .lead {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+  }
+
+  .prose p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .prose a:hover {
+    color: var(--accent-hover);
+  }
+
+  .prose .cta {
+    margin-top: 48px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+  }
+  .prose .cta a {
+    text-decoration: none;
+  }
+  .prose .cta a:hover {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+</style>
