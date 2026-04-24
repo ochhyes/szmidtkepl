@@ -73,6 +73,24 @@ services:
       timeout: 5s
       retries: 5
 
+  # Init-only: tworzy bazę w ClickHouse. `db migrate` sam nie tworzy bazy,
+  # a Plausible CE v2.1 runuje jako non-root user w Alpine, więc `apk add curl`
+  # w command plausible fail'uje z "apk database permission denied" → crash loop.
+  # Zamiast instalować curl w plausible, używamy obrazu ClickHouse (ma client natywnie).
+  # `restart: "no"` + `service_completed_successfully` — jednorazowy init container.
+  plausible_events_init:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    container_name: plausible_events_init
+    depends_on:
+      plausible_events_db:
+        condition: service_healthy
+    command: >
+      clickhouse-client --host plausible_events_db --port 9000
+      --query "CREATE DATABASE IF NOT EXISTS plausible_events_db"
+    networks:
+      - plausible_net
+    restart: "no"
+
   plausible:
     image: ghcr.io/plausible/community-edition:v2.1
     container_name: plausible
@@ -81,19 +99,16 @@ services:
     # których tu nie ustawiamy, więc kontener crashuje przy pierwszym starcie.
     # Admin tworzony osobno: `docker compose exec plausible /entrypoint.sh db
     # create-admin-user ...` (DEPLOY.md krok 4, sekcja "Pierwszy użytkownik admin").
-    # CREATE DATABASE przez clickhouse-client przed migrate — `db migrate` samo
-    # nie tworzy bazy w ClickHouse (postgres auto-tworzy przez POSTGRES_DB env,
-    # ClickHouse obrazu nie ma takiego env).
-    command: >
-      sh -c "apk add --no-cache curl &&
-             until curl -sf http://plausible_events_db:8123/ping >/dev/null; do sleep 2; done &&
-             curl -sf 'http://plausible_events_db:8123/?query=CREATE+DATABASE+IF+NOT+EXISTS+plausible_events_db' &&
-             /entrypoint.sh db migrate && /entrypoint.sh run"
+    # CREATE DATABASE realizuje plausible_events_init (osobna usługa wyżej) —
+    # plausible startuje dopiero po service_completed_successfully.
+    command: sh -c "/entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       plausible_db:
         condition: service_healthy
       plausible_events_db:
         condition: service_healthy
+      plausible_events_init:
+        condition: service_completed_successfully
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
