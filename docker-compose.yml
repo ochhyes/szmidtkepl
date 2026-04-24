@@ -61,7 +61,9 @@ services:
     networks:
       - plausible_net
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      # 127.0.0.1 wymuszone (nie `localhost`) — na VPS bez IPv6 `localhost`
+      # resolvuje do ::1, a clickhouse słucha tylko na IPv4.
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8123/ping"]
       interval: 10s
       timeout: 5s
       retries: 5
