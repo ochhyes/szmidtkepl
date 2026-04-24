@@ -14,7 +14,10 @@
     <session_log remove="remove"/>
     <part_log remove="remove"/>
 
-    <!-- VPS bez IPv6 — default `::` nie może bind'ować i clickhouse leci w unhealthy.
-         Nadpisanie na IPv4-only. -->
-    <listen_host replace="replace">0.0.0.0</listen_host>
+    <!-- VPS bez IPv6 — default `<listen_host>::</listen_host>` z docker_related_config.xml
+         nie bind'uje i clickhouse leci w unhealthy. `listen_try=1` pozwala pominąć
+         nieudane listeny, a drugi `listen_host` na 0.0.0.0 daje faktyczny listener IPv4.
+         (`replace="replace"` nie zadziałało przy bind mount override — zostawiamy add.) -->
+    <listen_try>1</listen_try>
+    <listen_host>0.0.0.0</listen_host>
 </clickhouse>
