@@ -72,15 +72,25 @@ git push vps main   # pierwszy deploy
 # DNS — u dostawcy domeny wskaż rekord A szmidtke.pl -> IP VPS
 # (i www.szmidtke.pl → ten sam IP, lub CNAME → szmidtke.pl)
 
-# Na VPS — nginx reverse proxy
+# 1. SSL — pobierz certy PRZED kopiowaniem configu (certonly nie rusza nginx).
+#    --nginx modyfikuje config i rozbija idempotentność — nie używaj tu.
+sudo certbot certonly --nginx -d szmidtke.pl
+sudo certbot certonly --nginx -d www.szmidtke.pl
+sudo certbot certonly --nginx -d analytics.szmidtke.pl
+
+# 2. Wgraj referencyjny config (zawiera bloki 443 z gotowymi ścieżkami certów).
 sudo cp /opt/szmidtke/app/nginx.conf.example /etc/nginx/sites-available/szmidtke.pl
 sudo ln -s /etc/nginx/sites-available/szmidtke.pl /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-
-# SSL via Certbot — osobne certy dla www (redirect) i apex.
-sudo certbot --nginx -d szmidtke.pl
-sudo certbot --nginx -d www.szmidtke.pl
 ```
+
+**UWAGA — regresja Sprint 3 iter 20 (udokumentowana):** nie uruchamiaj `sudo certbot --nginx -d …`
+po skopiowaniu configu. `--nginx` próbuje dokleić własne bloki 443/redirecty, zostawia
+zmiany poza `nginx.conf.example` i następny `cp` wywala je. Zbliżył to właśnie 403 na
+produkcji — apex `szmidtke.pl` stracił blok 443, request wpadał do default servera
+(`claude.szmidtke.pl`) i dostawał 403 z `/var/www/ai-agent/`. Używamy `certbot certonly`
+do pobrania certów i nginx.conf.example jako źródła prawdy konfiguracyjnej. Renewal
+(`certbot renew` cron/timer) nie rusza configu — bezpieczny.
 
 ---
 

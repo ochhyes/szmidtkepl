@@ -1,30 +1,60 @@
 # =============================================================================
 # Referencyjny blok nginx dla szmidtke.pl
 # Wklej do /etc/nginx/sites-available/szmidtke.pl i zrób symlink do sites-enabled.
-# SSL przez Certbot (letsencrypt) — uruchom `certbot --nginx -d szmidtke.pl`
-# po uruchomieniu tego bloku (certbot sam doda 443 + redirect 80→443).
+#
+# KOLEJNOŚĆ PIERWSZEGO SETUPU (obowiązkowa):
+# 1. certbot certonly -d szmidtke.pl -d www.szmidtke.pl -d analytics.szmidtke.pl
+#    (certonly, NIE --nginx — pobiera cert bez modyfikowania configu)
+# 2. sudo cp nginx.conf.example /etc/nginx/sites-available/szmidtke.pl
+# 3. sudo nginx -t && sudo systemctl reload nginx
+#
+# REDEPLOY configu: powtórz kroki 2-3. NIE odpalaj `certbot --nginx` — modyfikuje
+# config i psuje idempotentność (ta regresja właśnie wywaliła 403 w Sprint 3 iter 20).
+# Renewal przez `sudo certbot renew` lub systemd timer — nie rusza configu nginx.
 # =============================================================================
 
 # =============================================================================
-# www → non-www 301 (iter 20). Kanoniczna domena: szmidtke.pl (bez www).
-# Certbot -d www.szmidtke.pl doda ssl_certificate do bloku 443 poniżej.
+# Redirect 80 → 443 dla szmidtke.pl (kanoniczna domena)
 # =============================================================================
-server {
-    listen 80;
-    server_name www.szmidtke.pl;
-    return 301 https://szmidtke.pl$request_uri;
-}
-server {
-    listen 443 ssl http2;
-    server_name www.szmidtke.pl;
-    # ssl_certificate / ssl_certificate_key — dodaje certbot po
-    # `sudo certbot --nginx -d www.szmidtke.pl`.
-    return 301 https://szmidtke.pl$request_uri;
-}
-
 server {
     listen 80;
     server_name szmidtke.pl;
+    return 301 https://szmidtke.pl$request_uri;
+}
+
+# =============================================================================
+# www → non-www 301 (iter 20). Kanoniczna domena: szmidtke.pl (bez www).
+# =============================================================================
+server {
+    listen 80;
+    server_name www.szmidtke.pl;
+    return 301 https://szmidtke.pl$request_uri;
+}
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name www.szmidtke.pl;
+
+    ssl_certificate /etc/letsencrypt/live/www.szmidtke.pl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.szmidtke.pl/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    return 301 https://szmidtke.pl$request_uri;
+}
+
+# =============================================================================
+# Główny blok szmidtke.pl — 443 SSL, proxy do kontenera Astro na 127.0.0.1:3000
+# =============================================================================
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name szmidtke.pl;
+
+    ssl_certificate /etc/letsencrypt/live/szmidtke.pl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/szmidtke.pl/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     # Rozmiar body — wystarczy skromnie, formularze tekstowe.
     client_max_body_size 1m;
@@ -100,12 +130,24 @@ server {
 # =============================================================================
 # Plausible self-hosted — iteracja 16
 # Po uruchomieniu `docker compose up -d plausible` kontener nasłuchuje na
-# 127.0.0.1:8000. Dodaj DNS `analytics.szmidtke.pl` → IP VPS i włącz SSL
-# przez `sudo certbot --nginx -d analytics.szmidtke.pl` po restarcie nginx.
+# 127.0.0.1:8000. Przed kopiowaniem tego configu:
+#   sudo certbot certonly -d analytics.szmidtke.pl
 # =============================================================================
 server {
     listen 80;
     server_name analytics.szmidtke.pl;
+    return 301 https://analytics.szmidtke.pl$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name analytics.szmidtke.pl;
+
+    ssl_certificate /etc/letsencrypt/live/analytics.szmidtke.pl/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/analytics.szmidtke.pl/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     gzip on;
     gzip_types application/javascript application/json text/css;

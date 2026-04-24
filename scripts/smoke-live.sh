@@ -76,17 +76,32 @@ check "${BASE}/na-pewno-nie-istnieje-$$" "404" "404 na nieistniejącej trasie"
 # www → non-www 301 (iter 20) — regresja wskaźnikowa dla złego konfigu nginx.
 check_redirect "${WWW}/" "https://szmidtke.pl/" "www→non-www 301"
 
-# Security headers (iter 20). Nieobecność to regresja konfigu nginx; ważniejsze
-# od treści — sama ich obecność blokuje klasę ataków.
+# Security headers (iter 20). Walidacja KONKRETNYCH wartości, nie samej obecności —
+# regresja 403 Sprint 3 pokazała że inny server block (np. claude.szmidtke.pl)
+# może mieć HSTS/XFO ustawione, ale z innymi wartościami. Presence test by przeszedł,
+# request w rzeczywistości nie trafiałby do naszej aplikacji.
 headers=$(curl -sSI -m 10 "${BASE}/" 2>/dev/null)
-for h in "strict-transport-security" "x-content-type-options" "x-frame-options" "referrer-policy" "content-security-policy"; do
-  if echo "$headers" | grep -qi "^${h}:"; then
-    printf "  [OK  header] %s obecny\n" "$h"
-  else
-    printf "  [FAIL header] brak '%s'\n" "$h"
+assert_header() {
+  local name="$1" expected_substring="$2"
+  local line; line=$(echo "$headers" | grep -i "^${name}:" | tr -d '\r')
+  if [ -z "$line" ]; then
+    printf "  [FAIL header] brak '%s'\n" "$name"
     FAIL=$((FAIL+1))
+  elif ! echo "$line" | grep -qi "$expected_substring"; then
+    printf "  [FAIL header] '%s' obecny, ale nie zawiera '%s' — obcy server block?\n    %s\n" "$name" "$expected_substring" "$line"
+    FAIL=$((FAIL+1))
+  else
+    printf "  [OK  header] %s zawiera '%s'\n" "$name" "$expected_substring"
   fi
-done
+}
+# max-age=63072000 (2 lata) + preload to nasz konkretny HSTS z nginx.conf.example.
+# claude.szmidtke.pl ma max-age=31536000 bez preload — tego nie zaakceptujemy.
+assert_header "strict-transport-security" "max-age=63072000"
+assert_header "x-frame-options" "DENY"
+assert_header "x-content-type-options" "nosniff"
+assert_header "referrer-policy" "strict-origin-when-cross-origin"
+# CSP z analytics.szmidtke.pl — specyficzne dla naszego bloku.
+assert_header "content-security-policy" "analytics.szmidtke.pl"
 
 # Plausible — jeśli tracker ma być włączony, tag musi być w HTML. Brak tagu przy
 # włączonej konfiguracji oznacza że PUBLIC_PLAUSIBLE_DOMAIN nie trafił do builda
