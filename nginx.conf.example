@@ -31,8 +31,7 @@ server {
     return 301 https://szmidtke.pl$request_uri;
 }
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name www.szmidtke.pl;
 
     ssl_certificate /etc/letsencrypt/live/www.szmidtke.pl/fullchain.pem;
@@ -47,8 +46,7 @@ server {
 # Główny blok szmidtke.pl — 443 SSL, proxy do kontenera Astro na 127.0.0.1:3000
 # =============================================================================
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name szmidtke.pl;
 
     ssl_certificate /etc/letsencrypt/live/szmidtke.pl/fullchain.pem;
@@ -140,8 +138,7 @@ server {
 }
 
 server {
-    listen 443 ssl;
-    http2 on;
+    listen 443 ssl http2;
     server_name analytics.szmidtke.pl;
 
     ssl_certificate /etc/letsencrypt/live/analytics.szmidtke.pl/fullchain.pem;
