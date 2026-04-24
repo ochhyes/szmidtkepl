@@ -15,6 +15,11 @@ RUN npm ci --no-audit --no-fund
 # Kod
 COPY . .
 
+# PUBLIC_* trafia do builda jako build-arg (Vite inline'uje import.meta.env.PUBLIC_*).
+# Sekrety runtime (BUTTONDOWN_API_KEY itp.) zostają w env_file/runtime — nie w warstwach obrazu.
+ARG PUBLIC_PLAUSIBLE_DOMAIN=""
+ENV PUBLIC_PLAUSIBLE_DOMAIN=$PUBLIC_PLAUSIBLE_DOMAIN
+
 # Build — astro check + astro build. Wymaga pełnych dev deps.
 RUN npm run build
 

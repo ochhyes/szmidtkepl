@@ -233,13 +233,24 @@ ustawiony w .env — po deploy strony z tym flagą).
 
 ### 5. Redeploy strony z trackerem
 
-Flaga `PUBLIC_PLAUSIBLE_DOMAIN` jest inline'owana przez Astro w czasie budowania, więc po
-pierwszym ustawieniu w `.env` trzeba wymusić rebuild:
+Flaga `PUBLIC_PLAUSIBLE_DOMAIN` jest inline'owana przez Astro w czasie budowania.
+Przechodzi przez `build.args` w `docker-compose.yml` → `ARG` w `Dockerfile` → `ENV`
+w build stage → `import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN` w Astro. `.env` jest w
+`.dockerignore` (sekrety runtime nie lądują w warstwach obrazu), ale docker compose
+czyta `.env` z katalogu projektu i interpoluje `${PUBLIC_PLAUSIBLE_DOMAIN}` do build-argów.
+
+Po pierwszym ustawieniu w `.env` trzeba wymusić rebuild:
 
 ```bash
 cd /opt/szmidtke/app
-docker compose build web
+docker compose build web   # --no-cache jeśli rebuild nie łapie zmiany ARG
 docker compose up -d web
+```
+
+Weryfikacja po deploy (powinno zwrócić jedną linię ze `<script ... data-domain="szmidtke.pl"`):
+
+```bash
+curl -s https://szmidtke.pl/ | grep -i 'data-domain'
 ```
 
 ### Uwaga na zasoby
