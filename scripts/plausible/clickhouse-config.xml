@@ -13,4 +13,8 @@
     <asynchronous_metric_log remove="remove"/>
     <session_log remove="remove"/>
     <part_log remove="remove"/>
+
+    <!-- VPS bez IPv6 — default `::` nie może bind'ować i clickhouse leci w unhealthy.
+         Nadpisanie na IPv4-only. -->
+    <listen_host replace="replace">0.0.0.0</listen_host>
 </clickhouse>
