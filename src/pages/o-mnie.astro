@@ -5,7 +5,7 @@ import SmartImage from '../components/SmartImage.astro';
 
 <BaseLayout
   title="O mnie — Marcin Szmidtke"
-  description="Marcin Szmidtke — piszę o pasywności, schematach, czterdziestce bez mety. Kończę powieść Nie ja."
+  description={'Marcin Szmidtke — piszę o pasywności, schematach, czterdziestce bez mety. Kończę powieść „Nie ja".'}
 >
   <section class="about-preview" id="about">
     <div class="container wide">
@@ -24,12 +24,16 @@ import SmartImage from '../components/SmartImage.astro';
         <div class="about-text">
           <h1>O mnie</h1>
 
-          <p>
-            Zacząłem pisać, kiedy zorientowałem się, że dużo robię, żeby nie myśleć.
+          <p class="lead">
+            <em>Nazywam się Marcin Szmidtke. Piszę powieść</em> <em>Nie ja</em> <em>i krótsze rzeczy obok niej. Niżej — dłużej, gdyby było potrzebne.</em>
           </p>
 
           <p>
-            Że skuteczność — dowożone cele, kolejny trening, sensowny weekend z rodziną —
+            Zacząłem pisać, kiedy zorientowałem się, że dużo rzeczy robię po to, żeby nie myśleć.
+          </p>
+
+          <p>
+            Skuteczność — dowożone cele, trening z planu, uporządkowany weekend —
             jest ucieczką tak samo skuteczną jak każda inna. Nie przestałem działać.
             Zacząłem obok działania zapisywać, co po drodze zauważam.
           </p>
@@ -38,16 +42,16 @@ import SmartImage from '../components/SmartImage.astro';
 
           <div class="about-sep" aria-hidden="true">· · ·</div>
 
-          <p>To nie jest poradnik — nie mam tej wiedzy.</p>
+          <p>To nie jest poradnik. Nie mam tej wiedzy.</p>
 
           <p>
-            To nie jest blog motywacyjny — motywacji mam akurat za dużo.
-            Problem mam raczej z tym, co pod motywacją.
+            To nie jest blog motywacyjny. Motywacji mam akurat za dużo —
+            problem mam raczej z tym, co pod motywacją.
           </p>
 
           <p>
             To raczej notes pisany głośno. O pasywności, która wygląda jak odpoczynek,
-            ale nim nie jest. O schematach, w które wracasz, choć je rozpoznajesz.
+            ale nim nie jest. O schematach, w które wracasz, chociaż je rozpoznajesz.
             O czterdziestce, która przychodzi cicho — i w której nagle widać rzeczy,
             na które wcześniej nie było oczu. O ojcostwie, które zaczyna się długo
             po narodzinach dziecka. O relacjach, w które wchodzi się, zanim się je rozumie.
@@ -62,27 +66,30 @@ import SmartImage from '../components/SmartImage.astro';
 
           <p>Jeśli to ty — zostań.</p>
 
-          <div class="about-sep" aria-hidden="true">· · ·</div>
+          <h2>Co robię obok pisania</h2>
 
           <p>
-            Poza pisaniem: kończę powieść <em><a href="/nie-ja">Nie ja</a></em>.
-            Pracuję nad nią od czterech lat. Teraz rękopis jest w redakcji.
+            Kończę powieść <em><a href="/nie-ja">Nie ja</a></em>. Pracuję nad nią od czterech lat.
+            Teraz rękopis jest w redakcji.
           </p>
 
           <p>
-            Działam w Fundacji <a href="/pomocja">Pomocja</a>, głównie przy projekcie <em>Młody Ojciec</em> —
-            wsparcie dla mężczyzn wchodzących w rolę, której nikt nie szkoli.
+            Działam w <a href="/pomocja">Fundacji Pomocja</a>, głównie przy projekcie <em>Młody Ojciec</em> —
+            to wsparcie dla mężczyzn, którzy wchodzą w rolę, której nikt ich nie nauczył.
           </p>
 
           <p>
-            Czytam stoików. Głównie Marka Aureliusza, głównie dlatego,
+            Chodzę na terapię. Czytam stoików — głównie Marka Aureliusza, głównie dlatego,
             że przypomina mi, że większość tego, co mnie rusza, nie warto ruszać.
           </p>
 
           <p>
-            Chodzę na terapię. Uczę się rysować kredkami.
-            Kiedyś biegałem długie dystanse — to raczej mówi o tym,
-            co we mnie nie było w porządku, niż o sporcie.
+            Uczę się rysować kredkami. Powoli. Źle. Uspokaja.
+          </p>
+
+          <p>
+            Kiedyś biegałem długie dystanse. Dystans Ironmana też.
+            To raczej mówi o tym, co we mnie nie było w porządku, niż o sporcie.
           </p>
 
           <p>Jestem w związku z Martą. Reszta — w tekstach.</p>
@@ -133,11 +140,26 @@ import SmartImage from '../components/SmartImage.astro';
   @media (min-width: 768px) {
     .about-text h1 { font-size: 48px; }
   }
+  .about-text h2 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-top: 48px;
+    margin-bottom: 20px;
+  }
   .about-text p {
     margin-bottom: 18px;
     color: var(--text);
     font-size: 19px;
     line-height: 1.75;
+  }
+  .about-text .lead {
+    font-family: var(--font-serif);
+    font-size: 21px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
   }
   .about-text .about-sep {
     font-family: var(--font-serif);

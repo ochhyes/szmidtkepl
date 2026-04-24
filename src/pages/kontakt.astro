@@ -2,52 +2,74 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const email = 'kontakt@szmidtke.pl';
-const mailto = (subject: string) => `mailto:${email}?subject=${encodeURIComponent(subject)}`;
 ---
 
 <BaseLayout
   title="Kontakt — Marcin Szmidtke"
-  description="Jak napisać. Segmenty: odpowiedź na list, Fundacja Pomocja, media. Bez formularza — zwykły mail."
+  description="Odpisuję sam. Najszybciej idzie przez newsletter."
 >
   <section class="block">
     <div class="container reading">
       <article class="prose">
-        <h1>Napisz</h1>
+        <h1>Kontakt</h1>
         <p class="lead">
-          Czytam wszystkie listy. Odpowiadam wolno, ale odpowiadam.
+          <em>Odpisuję sam. Najszybciej idzie przez newsletter.</em>
         </p>
 
-        <h2>Chcesz odpowiedzieć na list, dodać coś od siebie, sprostować</h2>
         <p>
-          Najprostszy przypadek. Odpisz na dowolny list z newslettera — leci prosto do mnie.
-          Jeśli nie czytasz newslettera, napisz bezpośrednio.
-        </p>
-        <p>
-          → <a href={mailto('Odpowiedź na list')}>{email}</a>
+          Najprostszy sposób, żeby mi coś powiedzieć, to odpisać na list z newslettera.
         </p>
 
-        <h2>Szukasz Fundacji Pomocja / wsparcia w roli ojca</h2>
         <p>
-          Napisz krótko, kim jesteś i czego potrzebujesz. Skontaktuję się i przekażę dalej, jeśli potrzeba.
-          Więcej o Fundacji: <a href="/pomocja">pomocja</a>.
-        </p>
-        <p>
-          → <a href={mailto('Pomocja')}>{email}</a>
+          Każdy z tych listów wychodzi z mojego adresu, nie z systemu do mailingu.
+          Odpisujesz — wraca do mnie. Czytam wszystko. Nie zawsze odpowiadam od razu, ale czytam.
         </p>
 
-        <h2>Jesteś dziennikarzem, podcastem, wydawcą</h2>
-        <p>
-          Materiały prasowe i bio na życzenie. Odpowiadam zwykle w ciągu kilku dni.
+        <p>Jeśli nie masz jeszcze newslettera, a chcesz napisać teraz:</p>
+
+        <p class="email">
+          <a href={`mailto:${email}`}>{email}</a>
         </p>
+
+        <h2>Co dostanie odpowiedź najszybciej</h2>
+
         <p>
-          → <a href={mailto('Media')}>{email}</a>
+          Jeżeli piszesz o tekście, który cię w czymś dotknął — to dostanie odpowiedź najszybciej.
+          Takie listy są całym sensem tej roboty.
+        </p>
+
+        <p>
+          Jeżeli masz konkretne pytanie albo kontrę do fragmentu z newslettera — to samo.
+        </p>
+
+        <p>
+          Jeżeli zauważyłeś, że coś w tekście się rozjeżdża — literówkę, fałszywie brzmiące zdanie,
+          fakt, który ci się kłóci z tym, co wiesz — napisz. Bardzo pomagasz.
         </p>
 
         <h2>Czego nie obsługuję</h2>
+
         <p>
-          Nie sprzedaję szkoleń, nie prowadzę webinarów, nie robię konsultacji 1:1 (jeszcze).
-          Jeśli chcesz porozmawiać o zarządzaniu zespołem — napisz, ale uprzedzam,
+          Nie sprzedaję szkoleń, nie prowadzę webinarów, nie robię konsultacji jeden na jeden.
+        </p>
+
+        <p>
+          Jeśli chcesz porozmawiać o warsztacie pisarskim — napisz, ale uprzedzam,
           że to rzadko wychodzi poza wymianę listów.
+        </p>
+
+        <p>
+          Jeśli piszesz z ofertą współpracy reklamowej, afiliacji albo „contentu sponsorowanego" —
+          nie odpiszę. Nie dlatego, że mam coś do ciebie. Dlatego, że ta strona jest
+          świadomie poza tym obiegiem.
+        </p>
+
+        <h2>Sprawy Fundacji Pomocja</h2>
+
+        <p>
+          Jeśli piszesz w sprawie <a href="/pomocja">Fundacji Pomocja</a> albo projektu <em>Młody Ojciec</em> —
+          również możesz napisać na <a href={`mailto:${email}`}>{email}</a> i przekażę dalej.
+          W sprawach fundacyjnych odpowiadam wolniej, bo to robota zespołowa i nie wszystko jest po mojej stronie.
         </p>
 
         <div class="contact-foot">
@@ -70,7 +92,7 @@ const mailto = (subject: string) => `mailto:${email}?subject=${encodeURIComponen
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   @media (min-width: 768px) {
     .prose h1 { font-size: 60px; }
@@ -78,11 +100,10 @@ const mailto = (subject: string) => `mailto:${email}?subject=${encodeURIComponen
 
   .prose .lead {
     font-family: var(--font-serif);
-    font-style: italic;
     font-size: 22px;
     line-height: 1.6;
     color: var(--text-secondary);
-    margin-bottom: 48px;
+    margin-bottom: 40px;
   }
 
   .prose h2 {
@@ -97,8 +118,14 @@ const mailto = (subject: string) => `mailto:${email}?subject=${encodeURIComponen
   .prose p {
     font-size: 19px;
     line-height: 1.75;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     color: var(--text);
+  }
+
+  .prose .email {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    margin: 16px 0 24px;
   }
 
   .prose a {

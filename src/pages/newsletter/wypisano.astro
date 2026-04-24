@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Zapisane — Marcin Szmidtke"
-  description="Jesteś na liście. Pierwszy list przyjdzie w najbliższą środę rano."
+  title="Wypisane — Marcin Szmidtke"
+  description="Wypisałem cię z newslettera. Bez żalu, bez przypominajek."
 >
   <Fragment slot="head">
     <meta name="robots" content="noindex" />
@@ -13,25 +13,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="block">
     <div class="container reading">
       <article class="prose">
-        <h1>Zapisane</h1>
+        <h1>Wypisane</h1>
 
-        <p class="lead">W porządku. Jesteś na liście.</p>
-
-        <p>
-          Pierwszy list przyjdzie w najbliższą środę rano. Jeśli chcesz, odpisz mu —
-          jedno zdanie, pytanie, cokolwiek. Odpisuję sam.
+        <p class="lead">
+          Wypisałem cię. Bez żalu, bez przypominajek, bez „ostatniej okazji".
         </p>
 
         <p>
-          Tymczasem — <a href="/blog">spójrz na teksty</a>
-          albo <a href="/nie-ja">przeczytaj o <em>Nie ja</em></a>.
+          Jeśli kiedyś zechcesz wrócić — <a href="/#newsletter">zapis</a> jest w tym samym miejscu, co był.
         </p>
 
-        <div class="zapisany-foot">
+        <div class="wypisany-foot">
           <p>
             <a href="/">← wróć do strony</a>
             <span class="sep">·</span>
-            <a href="mailto:kontakt@szmidtke.pl?subject=Nie%20dosz%C5%82o%20potwierdzenie">napisz, jeśli list nie dojdzie</a>
+            <a href="/blog">teksty</a>
           </p>
         </div>
       </article>
@@ -48,7 +44,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     letter-spacing: -0.03em;
     line-height: 1.05;
     margin-bottom: 20px;
-    color: var(--accent);
+    color: var(--text);
   }
   @media (min-width: 768px) {
     .prose h1 { font-size: 80px; }
@@ -59,7 +55,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: 24px;
     line-height: 1.5;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .prose p {
@@ -78,7 +74,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     color: var(--accent-hover);
   }
 
-  .zapisany-foot {
+  .wypisany-foot {
     margin-top: 64px;
     padding-top: 32px;
     border-top: 1px solid var(--border);
@@ -87,13 +83,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: 17px;
     color: var(--text-muted);
   }
-  .zapisany-foot a {
+  .wypisany-foot a {
     color: var(--text-muted);
   }
-  .zapisany-foot a:hover {
+  .wypisany-foot a:hover {
     color: var(--accent);
   }
-  .zapisany-foot .sep {
+  .wypisany-foot .sep {
     margin: 0 12px;
   }
 </style>

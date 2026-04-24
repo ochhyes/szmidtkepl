@@ -10,23 +10,52 @@ const POSTS_PER_PAGE = 10;
 
 const posts = await getPublishedPosts();
 
-// Paginacja — w v1 i tak mamy 3 wpisy, więc pagination się nie wyświetli.
+// Paginacja — w v1 i tak mamy kilka wpisów, więc pagination się nie wyświetli.
 // Logika jest jednak gotowa: /blog = pierwsze 10, /blog/2 = kolejne itd. (niewdrożone w v1).
 const page = posts.slice(0, POSTS_PER_PAGE);
 const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
 ---
 
 <BaseLayout
-  title="Piszę — Marcin Szmidtke"
-  description="O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej."
+  title="Teksty — Marcin Szmidtke"
+  description="Eseje, obserwacje, fragmenty powieści. List raz na dwa tygodnie."
 >
   <section class="blog-header">
     <div class="container reading">
-      <h1>Piszę</h1>
-      <p class="subtitle">
-        O pasywności, schematach, tym co widać dopiero później. Jeden tekst w tygodniu, czasem rzadziej.
-        <a href="/blog/spis" class="archive-link">wszystkie teksty po kolei →</a>
+      <h1>Teksty</h1>
+      <p class="lead">
+        <em>Zbieram tu trzy rzeczy: eseje, obserwacje, fragmenty powieści.</em>
       </p>
+
+      <div class="blog-intro">
+        <p>
+          <strong>Eseje.</strong> Dłuższe. Jedna myśl, raczej rozpisana niż skondensowana.
+          Piszę je kilka razy w roku, kiedy coś się w końcu ułoży w głowie na tyle,
+          żeby miało sens dla kogoś poza mną.
+        </p>
+        <p>
+          <strong>Obserwacje.</strong> Krótkie. To, co zauważyłem w tygodniu,
+          i czego nie dało się powiedzieć dwoma zdaniami.
+        </p>
+        <p>
+          <strong>Fragmenty.</strong> Kawałki powieści <a href="/nie-ja"><em>Nie ja</em></a> —
+          pierwsze wersje, czasem po redakcji, czasem surowe.
+          Zostawiam je w widoku, żeby było widać, jak to się rzeczywiście pisze.
+        </p>
+
+        <div class="blog-sep" aria-hidden="true">· · ·</div>
+
+        <p>
+          Nic nie jest tu w porządku chronologicznym — data mówi mniej niż „co z czym się łączy".
+          Jeśli czegoś szukasz — spójrz w tagi albo w <a href="/blog/spis">spis po kolei</a>.
+        </p>
+
+        <p>
+          Jeżeli chcesz dostawać teksty mailem, zamiast polować po stronie —
+          <a href="/#newsletter">zapisz się do newslettera</a>. Raz na dwa tygodnie, jeden list.
+        </p>
+      </div>
+
       <CategoryFilter active="all" />
     </div>
   </section>
@@ -69,35 +98,42 @@ const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
   @media (min-width: 768px) {
     .blog-header h1 { font-size: 64px; }
   }
-  .blog-header .subtitle {
+  .blog-header .lead {
     font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 19px;
+    font-size: 22px;
     color: var(--text-secondary);
-    max-width: 620px;
+    line-height: 1.5;
+    margin-bottom: 32px;
   }
-  .blog-header .subtitle .archive-link {
-    display: inline-block;
-    margin-left: 12px;
+  .blog-intro p {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .blog-intro p strong {
+    font-weight: 600;
+  }
+  .blog-intro a {
     color: var(--accent);
-    text-decoration: none;
-    font-size: 16px;
-  }
-  .blog-header .subtitle .archive-link:hover {
-    text-decoration: underline;
     text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
   }
-  @media (max-width: 640px) {
-    .blog-header .subtitle .archive-link {
-      display: block;
-      margin-left: 0;
-      margin-top: 8px;
-    }
+  .blog-intro a:hover {
+    color: var(--accent-hover);
+  }
+  .blog-intro .blog-sep {
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+    letter-spacing: 0.6em;
+    margin: 24px 0 16px;
+    font-size: 16px;
+    user-select: none;
   }
   .empty {
     color: var(--text-secondary);

@@ -8,17 +8,48 @@ import Ornament from '../components/Ornament.astro';
 import { getPublishedPosts } from '../utils/posts';
 import { CATEGORY_LABEL } from '../content/config';
 
-const latestPosts = (await getPublishedPosts()).slice(0, 3);
+const latestPosts = (await getPublishedPosts()).slice(0, 4);
 ---
 
 <BaseLayout
-  title="Marcin Szmidtke — piszę o pasywności, schematach, drodze bez mety"
-  description="Marcin Szmidtke. Piszę o pasywności, schematach, drodze bez mety. Kończę powieść Nie ja."
+  title="Marcin Szmidtke"
+  description={'Marcin Szmidtke. Piszę powieść „Nie ja". Obok — to, co po drodze zauważam. List raz na dwa tygodnie.'}
 >
   <Hero
     statement="Piszę, żeby zauważyć, co robię, żeby nie myśleć."
     sub="Marcin Szmidtke. Piszę powieść <em>Nie&nbsp;ja</em>. Obok piszę to, co po drodze zauważam — raz na dwa tygodnie, w liście."
   />
+
+  <Ornament />
+
+  <section class="block">
+    <div class="container wide">
+      <NieJaTeaser variant="home" />
+    </div>
+  </section>
+
+  <Ornament />
+
+  <section class="block" id="dla-kogo">
+    <div class="container reading">
+      <h2 class="section-title">Dla kogo to piszę</h2>
+      <p>
+        Dla faceta, który z zewnątrz dowozi, a w środku nosi pytania, których nie zadaje kolegom.
+      </p>
+      <p>
+        Dla ludzi, którzy zauważyli, że ich życie gdzieś przestało być ich wyborem —
+        a stało się skutkiem wyborów sprzed lat.
+      </p>
+      <p>
+        Dla każdego, kto podejrzewa, że skuteczność też bywa ucieczką.
+      </p>
+      <p class="coda">Jeśli to ty — zostań.</p>
+    </div>
+  </section>
+
+  <Ornament />
+
+  <NewsletterInline variant="default" id="newsletter" />
 
   <Ornament />
 
@@ -42,18 +73,6 @@ const latestPosts = (await getPublishedPosts()).slice(0, 3);
   </section>
 
   <Ornament />
-
-  <NewsletterInline variant="default" id="newsletter" />
-
-  <Ornament />
-
-  <section class="block">
-    <div class="container wide">
-      <NieJaTeaser variant="home" />
-    </div>
-  </section>
-
-  <Ornament />
 </BaseLayout>
 
 <style>
@@ -69,5 +88,18 @@ const latestPosts = (await getPublishedPosts()).slice(0, 3);
   .all-posts-link:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+
+  #dla-kogo p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  #dla-kogo p.coda {
+    margin-top: 24px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-secondary);
   }
 </style>

@@ -14,14 +14,14 @@ const { variant = 'default', id = 'newsletter' } = Astro.props;
 const copy = variant === 'nie-ja'
   ? {
       heading: 'Chcesz wiedzieć, kiedy ukaże się <em>Nie ja</em>?',
-      lead: 'Ten sam list co normalnie — raz na dwa tygodnie. W dniu, w którym książka trafi do druku, napiszę pierwszy.',
+      lead: 'Zapisz się do newslettera. List wychodzi raz na dwa tygodnie. Subskrybenci dostają kolejne fragmenty i informacje o wydaniu wcześniej niż strona.',
       subtle: null,
       successText: '— dam znać.',
     }
   : {
-      heading: 'List co dwa tygodnie',
-      lead: 'Piszę list raz na dwa tygodnie. Krótszy niż teksty na stronie, bardziej z kuchni. Jeśli chcesz go dostawać — zostaw adres.',
-      subtle: 'Bez automatów. Odpisać możesz zawsze — piszę sam.',
+      heading: 'List raz na dwa tygodnie',
+      lead: 'Jedna rzecz, którą przez te dwa tygodnie zauważyłem i zdążyłem zapisać tak, żeby miało sens dla kogoś poza mną. Czasem esej, czasem fragment Nie ja, czasem trzy akapity i koniec. Bez reklam, bez afiliacji, bez kursów.',
+      subtle: 'Zapisz adres. Odpisuję sam, jeśli odpiszesz.',
       successText: '— jest, do czwartku.',
     };
 ---
@@ -41,14 +41,15 @@ const copy = variant === 'nie-ja'
         data-success-text={copy.successText}
         data-variant={variant}
       >
-        <label for={`${id}-email`} class="sr-only">Twój adres e-mail</label>
-        <input id={`${id}-email`} name="email" type="email" placeholder="twój adres…" required autocomplete="email" />
+        <label for={`${id}-email`} class="sr-only">Adres e-mail</label>
+        <input id={`${id}-email`} name="email" type="email" placeholder="twój@email.pl" required autocomplete="email" />
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
-        <button type="submit">zapisz →</button>
+        <button type="submit">Zapisz mnie</button>
       </form>
 
       <p class="newsletter-consent">
-        Zapisując się, akceptujesz <a href="/prywatnosc">politykę prywatności</a>. Wypisać się można jednym kliknięciem.
+        Raz na dwa tygodnie. Bez reklam, bez afiliacji. Wypisujesz się w każdej chwili z jednego kliknięcia.
+        <a href="/prywatnosc">Polityka prywatności</a>.
       </p>
 
       <div class="newsletter-note" aria-live="polite" data-newsletter-note></div>
@@ -89,7 +90,7 @@ const copy = variant === 'nie-ja'
             button.textContent = successText;
             input.value = '';
             input.disabled = true;
-            if (note) note.textContent = 'Pierwszy mail z linkiem do potwierdzenia powinien przyjść w ciągu kilku minut.';
+            if (note) note.textContent = 'Zapisane. Na skrzynkę poszedł list z potwierdzeniem — kliknij w nim link, żeby domknąć zapis.';
             if (typeof window.plausible === 'function') {
               window.plausible('Newsletter Signup', { props: { variant: form.dataset.variant || 'default' } });
             }
@@ -100,8 +101,8 @@ const copy = variant === 'nie-ja'
             if (note) {
               note.classList.add('error');
               note.textContent = data.error === 'invalid_email'
-                ? 'To chyba nie jest poprawny adres. Spróbuj jeszcze raz.'
-                : 'Coś się zacięło. Spróbuj jeszcze raz lub napisz na kontakt@szmidtke.pl.';
+                ? 'Ten adres wygląda na niekompletny. Sprawdzisz?'
+                : 'Coś się po mojej stronie rozjechało. Spróbuj za chwilę albo napisz na kontakt@szmidtke.pl.';
             }
           }
         } catch (err) {

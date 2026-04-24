@@ -8,18 +8,23 @@ const posts = (await getPublishedPosts()).slice(0, 3);
 ---
 
 <BaseLayout
-  title="404 — Marcin Szmidtke"
-  description="Nie ma tego, czego szukasz. Jest to, co mam."
+  title="Nie znaleziono — Marcin Szmidtke"
+  description="Tego tu nie ma. Może było i już nie jest, może miało być i jeszcze nie jest."
 >
   <section class="block">
     <div class="container reading">
       <div class="not-found">
-        <h1>404</h1>
-        <p class="message">Nie ma tego, czego szukasz.<br>Jest to, co mam.</p>
+        <h1>Tego tu nie ma</h1>
+        <p class="message">
+          Może było i już nie jest. Może miało być i jeszcze nie jest. Może źle wklejony link.
+        </p>
         <nav class="not-found-nav">
-          <a href="/">strona główna →</a>
-          <a href="/blog">wszystkie teksty →</a>
+          <a href="/">wróć na stronę główną →</a>
+          <a href="/blog">zacznij od listy tekstów →</a>
         </nav>
+        <p class="bridge-note">
+          Jeśli link przyszedł z newslettera i ewidentnie nie działa — <a href="/kontakt">napisz</a>, naprawię.
+        </p>
       </div>
 
       {posts.length > 0 && (
@@ -50,31 +55,33 @@ const posts = (await getPublishedPosts()).slice(0, 3);
     text-align: left;
   }
   .not-found h1 {
-    font-size: 80px;
+    font-size: 48px;
     font-weight: 500;
     letter-spacing: -0.02em;
-    color: var(--accent);
-    margin-bottom: 32px;
-    line-height: 1;
+    color: var(--text);
+    margin-bottom: 24px;
+    line-height: 1.1;
   }
   @media (min-width: 768px) {
-    .not-found h1 { font-size: 120px; }
+    .not-found h1 { font-size: 72px; }
   }
   .not-found .message {
-    font-size: 24px;
+    font-size: 22px;
     font-style: italic;
+    font-family: var(--font-serif);
     color: var(--text-secondary);
     line-height: 1.5;
-    margin-bottom: 48px;
-    max-width: 500px;
+    margin-bottom: 40px;
+    max-width: 580px;
   }
   @media (min-width: 768px) {
-    .not-found .message { font-size: 28px; }
+    .not-found .message { font-size: 24px; }
   }
   .not-found-nav {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
+    margin-bottom: 32px;
   }
   .not-found-nav a {
     font-family: var(--font-serif);
@@ -87,9 +94,20 @@ const posts = (await getPublishedPosts()).slice(0, 3);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
+  .not-found .bridge-note {
+    font-size: 17px;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+    line-height: 1.6;
+    max-width: 580px;
+  }
+  .not-found .bridge-note a {
+    color: var(--accent);
+  }
 
   .not-found-feed {
-    margin-top: 48px;
+    margin-top: 64px;
     padding-top: 48px;
     border-top: 1px solid var(--border);
     padding-bottom: 48px;

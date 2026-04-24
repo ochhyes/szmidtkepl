@@ -1,26 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import NieJaTeaser from '../components/NieJaTeaser.astro';
 import NieJaStatus from '../components/NieJaStatus.astro';
 import NewsletterInline from '../components/NewsletterInline.astro';
 import Ornament from '../components/Ornament.astro';
-
-// Fragment z rozdziału czwartego — ten sam tekst co we wpisie blogowym,
-// ale prezentowany jako fragment książki (bez meta wpisu, z fragment-label).
 ---
 
 <BaseLayout
-  title="Nie ja — powieść Marcina Szmidtke"
-  description="Powieść o kimś, kogo nosi przez jego własne wzorce — i o tym, jak powoli uczy się to zauważyć. Rękopis w redakcji."
+  title="Nie ja — powieść — Marcin Szmidtke"
+  description={'„Nie ja" — powieść o kimś, kogo nosi przez jego własne wzorce. Fragmenty i wiadomości o wydaniu.'}
 >
-  <section class="block">
-    <div class="container wide">
-      <h1 class="sr-only">Nie ja</h1>
-      <NieJaTeaser variant="full" />
-
-      <Ornament />
-
+  <section class="nieja-hero">
+    <div class="container reading">
+      <h1><em>Nie ja</em></h1>
+      <p class="kicker">Powieść o kimś, kogo nosi przez jego własne wzorce.</p>
+      <div class="nieja-meta">
+        <span class="nieja-pill">rękopis w redakcji</span>
+        <span class="nieja-pill-sep" aria-hidden="true">·</span>
+        <span class="nieja-pill">przewidywane wydanie: 2027</span>
+      </div>
       <NieJaStatus current="redakcja" />
+    </div>
+  </section>
+
+  <Ornament />
+
+  <section class="block">
+    <div class="container reading">
+      <h2 class="section-title">O książce</h2>
+
+      <p>
+        Książka o pasywności, która z zewnątrz wygląda jak normalne życie.
+        O relacjach, w które wchodzi się, zanim się je rozumie.
+        O czterdziestce, na której pewne rzeczy widać dopiero wtedy,
+        kiedy już nie można ich cofnąć.
+      </p>
+
+      <p>
+        Główny bohater, Tomek, dowozi. Ma pracę, związek, wypłatę, plan.
+        Po zewnętrznej stronie nic się nie dzieje — i to jest niepokojąca część.
+        Bo w środku dzieje się coś, czego nie umie nazwać, i co od dwudziestu lat
+        układa mu życie za niego.
+      </p>
+
+      <p>
+        To nie jest powieść o kryzysie wieku średniego. To powieść o tym,
+        co było, zanim kryzys się zaczął. O mechanizmach, które przygotowywały go
+        latami — i których on nie widział, bo pasowały do wszystkiego dookoła.
+      </p>
     </div>
   </section>
 
@@ -38,7 +64,7 @@ import Ornament from '../components/Ornament.astro';
         i ma uczucie, którego nie umie nazwać wprost: <em>to nie ja to wszystko wybrałem</em>.
       </p>
 
-      <p>Nie żeby wybrał źle. Żeby w ogóle wybrał.</p>
+      <p>Nie, że wybrał źle. Że w ogóle wybrał.</p>
 
       <p>
         Tomek nie protestuje. Tomek nie wraca. Tomek dalej chodzi do pracy,
@@ -64,44 +90,51 @@ import Ornament from '../components/Ornament.astro';
 
       <p>
         Teraz jest Część III. Rękopis jest w redakcji.
-        Fragmenty pojawiają się tu, na stronie, zanim książka trafi do wydawcy.
-        Nie dlatego, żeby coś sprzedać. Dlatego, żeby mieć czytelników,
-        z którymi rozmawiam, zanim tekst trafi w ręce kogoś, kto nie zna
-        ani mnie, ani kontekstu.
-      </p>
-
-      <p>
-        Jeśli chcesz dostawać fragmenty i informacje o postępach —
-        <a href="/#newsletter">zapisz się do newslettera</a>.
+        Fragmenty pojawiają się tu, na stronie, zanim książka trafi do wydawcy —
+        nie po to, żeby coś sprzedać, tylko po to, żeby mieć czytelników,
+        z którymi rozmawiam, zanim tekst trafi w ręce kogoś, kto nie zna ani mnie, ani kontekstu.
       </p>
     </div>
   </section>
 
   <Ornament />
 
-  <section class="block">
+  <section class="block" id="fragment">
     <div class="container wide">
       <div class="nie-ja-fragment">
         <div class="fragment-label">fragment z rozdziału czwartego</div>
-        <p>
-          Tomek nie wiedział, w którym momencie zaczął się zgadzać.
-          Zgoda nie miała żadnej chwili. Po prostu któregoś ranka była na swoim miejscu,
-          jak kubek postawiony dzień wcześniej w innym miejscu, o którym zapomniał,
-          ale który rano był tam, gdzie zawsze, jakby nigdy nie wędrował.
+        <p class="fragment-intro">
+          <em>Krótki fragment z rozdziału czwartego. Rękopis jest w redakcji — finalna wersja książkowa może się różnić.</em>
         </p>
+
+        <p>Pukanie do drzwi o dwudziestej.</p>
         <p>
-          Wstał wcześnie. Zrobił kawę. Nie wspomniał jej o tym, co powiedziała wieczorem.
-          Ona też nie wspomniała. To nie było zawieszenie broni — raczej uznanie,
-          że broń była wymyślona, że nic się nie zdarzyło, że rozmowa nie była rozmową, tylko pogodą.
+          Nie spodziewam się nikogo. Siedzę na kanapie w dresach, telewizor gada sam do siebie.
+          Nie wiem, co leci. Nie wiem, jak długo tak siedzę. Nie wiem, który to dzień —
+          czwarty, piąty, szósty bez niej. Wszystkie wyglądają tak samo.
         </p>
+        <p>Pukanie. Drugie.</p>
+        <p>Wstaję. Nogi miękkie. Otwieram bez patrzenia w wizjer.</p>
+        <p>Aleksandra.</p>
         <p>
-          Miał wrażenie, że znowu coś zmienił w sobie, żeby pasowało.
-          I miał wrażenie, że nie umiałby powiedzieć, co konkretnie.
+          Mokre włosy. Pada deszcz, nie wiedziałem. Granatowy płaszcz, ten który jej kupiłem.
+          Zielone oczy, podkrążone. Usta rozchylone, jakby chciała coś powiedzieć i zapomniała co.
         </p>
+        <p>Nie mówię nic.</p>
         <p>
-          W kuchni było jasno. Okno wychodziło na zachód, ale o tej porze światło padało w skos od korytarza,
-          od strony, z której nie powinno padać. Tomek patrzył na smugę na podłodze
-          i nie wiedział, dlaczego ona go uspokajała.
+          Miałem przemowę. Przez sześć dni układałem zdania w głowie. Dlaczego. Jak mogłaś.
+          Co ja ci zrobiłem. Miałem granice. Miałem godność. Miałem plan, że jak zadzwoni, powiem nie.
+        </p>
+        <p>Nie zadzwoniła. Przyszła.</p>
+        <p>
+          I ja stoję w drzwiach w wyciągniętych dresach, z włosami w każdą stronę,
+          i zapominam każde słowo, które przygotowałem.
+        </p>
+        <p>— Mogę wejść? — pyta.</p>
+        <p>Cofam się.</p>
+
+        <p class="fragment-outro">
+          Więcej fragmentów — <a href="/#newsletter">w newsletterze</a>, zanim pojawią się tutaj.
         </p>
       </div>
     </div>
@@ -113,9 +146,56 @@ import Ornament from '../components/Ornament.astro';
 </BaseLayout>
 
 <style>
+  .nieja-hero {
+    padding: 80px 0 48px;
+  }
+  .nieja-hero h1 {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+  @media (min-width: 768px) {
+    .nieja-hero h1 { font-size: 96px; }
+  }
+  .nieja-hero .kicker {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    max-width: 540px;
+  }
+  @media (min-width: 768px) {
+    .nieja-hero .kicker { font-size: 26px; }
+  }
+  .nieja-meta {
+    margin-bottom: 32px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .nieja-meta .nieja-pill {
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    display: inline-block;
+  }
+  .nieja-meta .nieja-pill-sep {
+    color: var(--text-muted);
+  }
+
   .nie-ja-fragment {
     max-width: var(--reading-w);
-    margin: 64px auto 0;
+    margin: 0 auto;
     padding: 40px 0;
     font-style: italic;
     color: var(--text-secondary);
@@ -133,6 +213,19 @@ import Ornament from '../components/Ornament.astro';
     font-size: 14px;
     color: var(--text-muted);
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+  }
+  .nie-ja-fragment .fragment-intro {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .nie-ja-fragment .fragment-outro {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 32px;
+    font-style: italic;
   }
 </style>

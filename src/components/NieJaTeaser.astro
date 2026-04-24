@@ -32,7 +32,7 @@ const ctaLink = variant === 'home' ? '/nie-ja' : null;
       <p>
         Powieść o kimś, kogo nosi przez jego własne wzorce. O czterdziestce, na której
         niektóre rzeczy widać dopiero wtedy, kiedy już nie można ich cofnąć. O facecie, który dowozi —
-        i któregoś ranka siada do kawy i nie wie, komu.
+        i któregoś ranka siada do kawy, i nie wie, komu.
       </p>
     ) : (
       <>
@@ -55,7 +55,13 @@ const ctaLink = variant === 'home' ? '/nie-ja' : null;
         </p>
       </>
     )}
-    {ctaLink && <a href={ctaLink} class="read-more">więcej o książce →</a>}
+    {ctaLink && (
+      <p class="nie-ja-ctas">
+        <a href={ctaLink} class="read-more">czytaj więcej o <em>Nie ja</em> →</a>
+        <span class="sep" aria-hidden="true"> · </span>
+        <a href={`${ctaLink}#fragment`} class="read-more">fragment →</a>
+      </p>
+    )}
     <div><span class="nie-ja-status">rękopis w redakcji</span></div>
   </div>
 </div>
@@ -92,6 +98,9 @@ const ctaLink = variant === 'home' ? '/nie-ja' : null;
     margin-bottom: 20px;
   }
 
+  .nie-ja-text .nie-ja-ctas {
+    margin-bottom: 16px;
+  }
   .nie-ja-text .read-more {
     font-family: var(--font-serif);
     font-size: 17px;
@@ -99,11 +108,16 @@ const ctaLink = variant === 'home' ? '/nie-ja' : null;
     color: var(--accent);
     text-decoration: none;
     display: inline-block;
-    margin-bottom: 16px;
   }
   .nie-ja-text .read-more:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+  .nie-ja-text .nie-ja-ctas .sep {
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    margin: 0 4px;
   }
 
   .nie-ja-status {
