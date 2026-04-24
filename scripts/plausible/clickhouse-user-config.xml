@@ -1,4 +1,21 @@
 <clickhouse>
+    <!-- Re-enable network access dla usera `default`. Domyślnie obraz clickhouse
+         wyłącza network access gdy CLICKHOUSE_USER/PASSWORD env nie są ustawione,
+         przez co Plausible (łączący się jako default) dostaje AUTHENTICATION_FAILED.
+         Clickhouse nie jest wystawiony na świat (tylko wewnętrzna sieć docker
+         `plausible_net`), więc 0.0.0.0/0 jest bezpieczne. -->
+    <users>
+        <default>
+            <password></password>
+            <networks>
+                <ip>::/0</ip>
+                <ip>0.0.0.0/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <access_management>1</access_management>
+        </default>
+    </users>
     <profiles>
         <default>
             <log_queries>0</log_queries>
