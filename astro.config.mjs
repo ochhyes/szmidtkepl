@@ -9,6 +9,11 @@ export default defineConfig({
   // (np. src/pages/api/subscribe.ts) renderują się on-demand dzięki adapterowi Node.
   output: 'static',
   adapter: node({ mode: 'standalone' }),
+  redirects: {
+    '/atom.html': '/feed',
+    '/atom': '/feed',
+    '/rss': '/feed',
+  },
   integrations: [
     mdx(),
     sitemap({

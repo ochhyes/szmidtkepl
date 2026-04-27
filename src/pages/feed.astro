@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Ornament from '../components/Ornament.astro';
+---
+
+<BaseLayout
+  title="Feed — szmidtke.pl"
+  description="Subskrybuj nowe teksty Marcina Szmidtke przez czytnik RSS / Atom — bez algorytmu, bez maila."
+>
+  <section class="block">
+    <div class="container reading">
+      <h1 class="feed-title">Czytnik zamiast skrzynki</h1>
+      <p class="feed-lead">
+        Jeśli wolisz dostawać nowe teksty do swojego czytnika RSS/Atom — niżej masz adres.
+        Bez maila, bez algorytmu, bez automatycznych przypomnień.
+      </p>
+
+      <div class="feed-urls">
+        <p>
+          <span class="feed-label">Atom (preferowany):</span><br>
+          <a href="/atom.xml"><code>https://szmidtke.pl/atom.xml</code></a>
+        </p>
+        <p>
+          <span class="feed-label">RSS (alternatywa):</span><br>
+          <a href="/rss.xml"><code>https://szmidtke.pl/rss.xml</code></a>
+        </p>
+      </div>
+
+      <Ornament />
+
+      <h2 class="feed-h2">Jak to dodać do czytnika</h2>
+      <p>
+        Skopiuj jeden z adresów wyżej i wklej w swojej aplikacji w miejsce <em>„Add feed"</em>
+        / <em>„Subskrybuj"</em>. Większość czytników wykryje Atom automatycznie po wpisaniu samego
+        <code>szmidtke.pl</code>.
+      </p>
+
+      <p class="feed-readers">
+        Popularne czytniki: <a href="https://feedly.com" rel="noopener">Feedly</a> ·
+        <a href="https://www.inoreader.com" rel="noopener">Inoreader</a> ·
+        <a href="https://newsblur.com" rel="noopener">NewsBlur</a> ·
+        <a href="https://www.fraidyc.at" rel="noopener">Fraidycat</a>
+      </p>
+
+      <Ornament />
+
+      <p class="feed-alt">
+        Wolisz mailem? <a href="/#newsletter">Zapisz się na list co dwa tygodnie</a> —
+        krótszy niż teksty na stronie, bardziej z kuchni.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .feed-title {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    .feed-title { font-size: 54px; }
+  }
+  .feed-lead {
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+  .feed-urls {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 0;
+    margin-bottom: 24px;
+  }
+  .feed-urls p { margin-bottom: 24px; }
+  .feed-urls p:last-child { margin-bottom: 0; }
+  .feed-label {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+  .feed-urls code {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    word-break: break-all;
+  }
+  .feed-h2 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .feed-readers {
+    color: var(--text-secondary);
+    font-size: 17px;
+  }
+  .feed-readers a { margin-right: 4px; }
+  .feed-alt {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+</style>
