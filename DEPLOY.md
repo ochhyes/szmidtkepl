@@ -1,69 +1,59 @@
 # Deploy — szmidtke.pl
 
-Workflow: **dwa remote'y** — GitHub (`origin`) jako źródło prawdy i backup, VPS (`vps`) jako deploy target przez bare repo + post-receive hook.
+Workflow: **GitHub (`origin`) jako źródło prawdy**. VPS pulla z GitHuba i robi rebuild kontenera. Lokalnie odpalasz `./scripts/deploy.sh` — to robi push + SSH-uje do VPS i triggeruje pull + rebuild jednym ruchem.
 
 ---
 
 ## Jednorazowy setup
 
-### 1. GitHub remote (źródło prawdy)
-
-Repo: https://github.com/ochhyes/szmidtkepl (pust, do wypełnienia pierwszym pushem).
+### 1. GitHub remote
 
 ```bash
 git remote add origin https://github.com/ochhyes/szmidtkepl.git
 git push -u origin main
 ```
 
-### 2. VPS — bare repo + hook
+### 2. VPS — clone + .env + Docker
 
-Zaloguj się na VPS (SSH).
+Zaloguj się na VPS jako `ubuntu`.
 
 ```bash
-# Jednorazowo — przygotuj miejsce
-sudo mkdir -p /opt/szmidtke/app
-sudo chown $USER:$USER /opt/szmidtke /opt/szmidtke/app
+# Przygotuj miejsce
+sudo mkdir -p /opt/szmidtke
+sudo chown -R ubuntu:ubuntu /opt/szmidtke
 
-# Bare repo — to tutaj wchodzą pushy
-git init --bare /opt/szmidtke.git
+# Clone z GitHuba (repo jest public — bez auth)
+cd /opt/szmidtke
+git clone https://github.com/ochhyes/szmidtkepl.git app
 
-# .env na produkcji — wpisz prawdziwy BUTTONDOWN_API_KEY
+# .env na produkcji — wklej PRAWDZIWY klucz Buttondown z https://buttondown.com/settings/programming
 cat > /opt/szmidtke/app/.env <<EOF
-BUTTONDOWN_API_KEY=bd_xxx_prawdziwy_klucz35d40f52-b84e-4a31-a769-cfb7ce5a298d
+BUTTONDOWN_API_KEY=<wklej-tutaj-klucz-z-buttondown>
 PUBLIC_SITE_URL=https://szmidtke.pl
 EOF
 chmod 600 /opt/szmidtke/app/.env
 
-# Post-receive hook — checkout + docker rebuild
-cat > /opt/szmidtke.git/hooks/post-receive <<'EOF'
-#!/usr/bin/env bash
-set -e
-WORK=/opt/szmidtke/app
-GIT_DIR=/opt/szmidtke.git
+# Pierwszy build + start
+cd /opt/szmidtke/app
+docker compose up -d --build
 
-echo "→ checkout main do $WORK"
-git --work-tree="$WORK" --git-dir="$GIT_DIR" checkout -f main
-
-cd "$WORK"
-echo "→ docker compose build"
-docker compose build
-
-echo "→ docker compose up -d (zero-downtime replace)"
-docker compose up -d
-
-echo "✓ deploy done @ $(date -Iseconds)"
-EOF
-chmod +x /opt/szmidtke.git/hooks/post-receive
+# Sprawdź że odpowiada
+curl -sI http://127.0.0.1:3000 | head -1   # → HTTP/1.1 200 OK
 ```
 
-### 3. Remote `vps` lokalnie
+### 3. SSH klucz do VPS dla deploy.sh
 
-Na swojej maszynie (tej, z której pushujesz):
+`./scripts/deploy.sh` SSH-uje się do VPS jako `ubuntu`. Test:
 
 ```bash
-git remote add vps ssh://USER@VPS_HOST/opt/szmidtke.git
-# np. git remote add vps ssh://marcin@203.0.113.42/opt/szmidtke.git
-git push vps main   # pierwszy deploy
+ssh ubuntu@VPS_IP "whoami"
+# Powinno zwrócić: ubuntu (bez pytania o hasło)
+```
+
+Jeśli pyta o hasło — dodaj swój klucz do `~/.ssh/authorized_keys` na VPS. Z PowerShella:
+
+```powershell
+type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh ubuntu@VPS_IP "cat >> ~/.ssh/authorized_keys"
 ```
 
 ### 4. DNS + SSL
@@ -121,38 +111,48 @@ Jeśli CSP blokuje legalny zasób (konsola: *„Refused to load…"*), poszerz o
 ## Codzienny deploy
 
 ```bash
-# Jedno polecenie
+# Jedno polecenie — push GitHub + pull/rebuild na VPS + smoke test
 ./scripts/deploy.sh
 
-# Albo ręcznie
-git push origin main    # backup + GitHub
-git push vps main       # deploy (post-receive hook robi resztę)
+# Albo ręcznie, dwa kroki:
+git push origin main
+ssh ubuntu@VPS_IP "cd /opt/szmidtke/app && git pull && docker compose up -d --build"
 ```
 
-Hook na VPS wykonuje:
-1. `git checkout -f main` do `/opt/szmidtke/app`
-2. `docker compose build` — rebuild image
-3. `docker compose up -d` — replace kontenera (zero-downtime jeśli healthcheck przechodzi)
+`scripts/deploy.sh` na końcu robi `curl https://szmidtke.pl` i zwraca błąd, jeśli HTTP nie jest 200 — od razu wiesz, że deploy padł.
 
-Downtime typowo 1–3s (start nowej instancji + wymiana).
+Downtime typowo 1–3s (start nowej instancji + wymiana — Docker ma `restart: unless-stopped` i healthcheck).
+
+Konfiguracja przez ENV jeśli IP albo ścieżka inne niż domyślne:
+
+```bash
+VPS_HOST=ubuntu@1.2.3.4 VPS_PATH=/opt/szmidtke/app ./scripts/deploy.sh
+```
 
 ---
 
 ## Rollback
 
-Jeśli deploy zepsuł produkcję:
+Jeśli deploy zepsuł produkcję — przywróć poprzedni commit na VPS bez ruszania GitHuba:
 
 ```bash
 # Znajdź poprzedni zielony commit
 git log --oneline -10
 
-# Force-push POPRZEDNIEGO commita na vps (NIE origin)
-git push vps <sha-poprzedniego>:main -f
+# Na VPS: checkout konkretnego SHA + rebuild
+ssh ubuntu@VPS_IP "cd /opt/szmidtke/app && git checkout <sha-poprzedniego> && docker compose up -d --build"
 ```
 
-Po naprawie buga na main — zwykły `./scripts/deploy.sh` przywraca świeży stan.
+Po naprawie buga na main — `./scripts/deploy.sh` zaktualizuje VPS do main z powrotem (`git pull` zignoruje detached HEAD i pójdzie na `origin/main`).
 
-**Uwaga:** `-f` tylko na `vps`, **nigdy** na `origin` (GitHub jest źródłem prawdy).
+**Alternatywa** — revert na GitHubie + redeploy:
+
+```bash
+git revert <sha-zepsutego-commita>
+./scripts/deploy.sh
+```
+
+Cleaner historia, GitHub jest spójny z VPS.
 
 ---
 
@@ -160,16 +160,16 @@ Po naprawie buga na main — zwykły `./scripts/deploy.sh` przywraca świeży st
 
 ```bash
 # Logi aplikacji
-ssh vps 'docker compose -f /opt/szmidtke/app/docker-compose.yml logs -f'
+ssh ubuntu@VPS_IP "cd /opt/szmidtke/app && docker compose logs -f web"
 
 # Healthcheck
 curl -I https://szmidtke.pl/
 
 # Metryki kontenera
-ssh vps 'docker stats szmidtkepl'
+ssh ubuntu@VPS_IP "docker stats szmidtkepl"
 
-# Restart bez rebuild
-ssh vps 'cd /opt/szmidtke/app && docker compose restart'
+# Restart bez rebuild (np. po zmianie .env)
+ssh ubuntu@VPS_IP "cd /opt/szmidtke/app && docker compose down && docker compose up -d"
 ```
 
 ---
@@ -179,7 +179,7 @@ ssh vps 'cd /opt/szmidtke/app && docker compose restart'
 - **Backup `.env`** na VPS — nie jest w git, jeśli zniknie to klucz Buttondown przepadnie.
 - **Certyfikat Certbot** renewuje się sam co 90 dni (cron). Warto sprawdzić `sudo certbot renew --dry-run` raz na kwartał.
 - **Docker cleanup** — stare image narastają: `docker system prune -a --volumes` raz na miesiąc.
-- **Bare repo po failed push** — jeśli hook padnie w trakcie builda, ręcznie `docker compose up -d` na VPS.
+- **Failed deploy** — jeśli `./scripts/deploy.sh` przerwie się w trakcie builda, zaloguj się na VPS, sprawdź `docker compose logs web --tail=50`, napraw, ręcznie `docker compose up -d --build`.
 
 ---
 
